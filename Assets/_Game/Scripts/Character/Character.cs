@@ -10,23 +10,28 @@ public abstract class Character : GameUnit
     [SerializeField] private Animator animator;
     [SerializeField] private LayerMask CharacterLayer;
     [SerializeField] private Collider col;
+    [SerializeField] protected Transform IndicatorOffset;
+    [SerializeField] protected Transform weaponPoint;
+    [SerializeField] protected Renderer Mesh;
 
+    protected string CharName;
     protected float Speed;
     protected bool IsWeapon;
+    protected TargetIndicator TargetIndicator;
+    protected int level;
+    protected float currentScale;
+    protected Weapon weapon;
+    protected PoolType weaponType;
+    protected Character Target;
 
-    
+    protected float rangeAttack;
+
     private string currentAnim;
     private CounterTime counterTime = new CounterTime();
     public CounterTime CounterTime => counterTime;
+    public int DeadScore;
 
-    private float rangeAttack;
 
-     
-    public Transform weaponPoint;
-    public Weapon weapon;
-    public PoolType weaponType;
-    public Character Target;
-    public Renderer Mesh;
 
     public override void OnInit()
     {
@@ -34,12 +39,14 @@ public abstract class Character : GameUnit
         col.enabled = true;
         Speed = Constant.SPEED_DEFAULT;
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT;
+        level = 0;
+        UpLevel(0);
         Mesh.material = DataManager.Instance.GetColor();
         ChangeWeapon(DataManager.Instance.RandomWeapon());
-
     }
 
     public abstract void Attack();
+    public abstract void GetTargetIndicator();
     public void ChangeWeapon(PoolType weaponType)
     {
         foreach(Transform child in weaponPoint)
@@ -110,4 +117,16 @@ public abstract class Character : GameUnit
         Quaternion targetRotation = Quaternion.Euler(0f, targetAngleY, 0f);
         TF.rotation = Quaternion.Slerp(TF.rotation, targetRotation, Time.deltaTime * 100f);
     }
+
+    public virtual void UpLevel(int score)
+    {
+        level += score;
+        TargetIndicator.SetLevel(level);
+        ScoreRate scoreRate = LevelManager.Instance.GetScoreRate(level);
+        currentScale = scoreRate.Scale;
+        DeadScore = scoreRate.deadScore;
+        rangeAttack = Constant.RANGE_ATTACK_DEFAULT*currentScale;
+        this.TF.localScale = Vector3.one * currentScale;
+    }
+
 }

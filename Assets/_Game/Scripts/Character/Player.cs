@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,20 @@ using UnityEngine;
 public class Player : Character
 {
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private CircleAttack circleAttack;
 
-    private void Start()
+    public override void OnInit()
     {
+        GetTargetIndicator();
+        base.OnInit();
+        circleAttack.DrawCircle(rangeAttack);
+    }
+    private void Start()
+    {        
         OnInit();
     }
     private void Update()
-    {
-
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    ChangeWeapon();
-        //}
-
+    {     
         if (Input.GetMouseButtonDown(0))
         {
             CounterTime.OnCancel();
@@ -63,5 +65,19 @@ public class Player : Character
     {
         IsWeapon = false;
         CounterTime.OnStart(Throw, Constant.DELAY_TIME_ATTACK);
+    }
+
+    public override void GetTargetIndicator()
+    {
+        TargetIndicator = SimplePool.Spawn<TargetIndicator>(PoolType.Indicator);
+        TargetIndicator.Target = IndicatorOffset;
+        TargetIndicator.textName.text = "You";
+        TargetIndicator.OnInit();
+    }
+
+    public override void UpLevel(int score)
+    {
+        base.UpLevel(score);
+        Cache.MainCamera.DOOrthoSize(9.5f * currentScale, 1f);
     }
 }

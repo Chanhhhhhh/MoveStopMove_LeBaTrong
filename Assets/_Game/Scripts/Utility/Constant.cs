@@ -17,4 +17,33 @@ public class Constant
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
     public const string TAG_COIN = "coin";
+
+    public static List<string> names = new List<string>
+       {
+            "John",
+            "Emma",
+            "Liam",
+            "Olivia",
+            "Noah",
+            "Ava",
+            "Lucas",
+            "Mia",
+            "Ben",
+            "Sophia",
+            "James",
+            "Charlotte",
+            "Elijah",
+            "Emily",
+            "Henry",
+            "Grace",
+            "David",
+            "Lily",
+            "Leo",
+            "Anna",
+        };
+    public static string GetName()
+    {
+        return names[Random.Range(0, names.Count - 1)];
+    }
+
 }

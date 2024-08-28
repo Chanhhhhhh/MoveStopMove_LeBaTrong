@@ -15,13 +15,18 @@ public class Enemy : Character
     #endregion
 
     public StateMachine<Enemy> EnemyStateMachine;
+
+    [SerializeField] private GameObject focus;
     public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.03f;
     private Vector3 Destination;
     [SerializeField] private NavMeshAgent NavMeshAgent;
 
     public override void OnInit()
+
     {
-        base.OnInit();
+        CharName = Constant.GetName();
+        GetTargetIndicator();
+        base.OnInit();    
         EnemyStateMachine.ChangeState(EnemyMoveState);
 
 
@@ -29,6 +34,7 @@ public class Enemy : Character
     public override void OnDespawn()
     {
         base.OnDespawn();
+        TargetIndicator.OnDespawn();
         EnemyStateMachine.ChangeState(EnemyDeadState);
 
     }
@@ -47,6 +53,19 @@ public class Enemy : Character
     }
 
     public override void Attack()
+    {
+
+    }
+
+    public override void GetTargetIndicator()
+    {
+        TargetIndicator = SimplePool.Spawn<TargetIndicator>(PoolType.Indicator);
+        TargetIndicator.Target = IndicatorOffset;
+        TargetIndicator.textName.text = CharName;
+        TargetIndicator.OnInit();
+    }
+
+    public void SetActiveFocus(bool IsFocus)
     {
 
     }

@@ -325,4 +325,5 @@ public enum PoolType
     Arrow = 4,
     Hammer = 5,
     Enemy = 6,
+    Indicator = 7,
 }
