@@ -131,5 +131,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 4
-  weaponData: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 3a55ece228dd2f1499f4124a9d226a57, type: 2}
   Child: {fileID: 7666014229064119653}

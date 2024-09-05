@@ -35,7 +35,7 @@ public class LevelManager : Singleton<LevelManager>
     public int EnemyAmount = 4;
     public int countEnemy;
 
-    private void Start()
+    public void OnInit()
     {
         for (int i = 0;i < EnemyAmount;i++)
         {

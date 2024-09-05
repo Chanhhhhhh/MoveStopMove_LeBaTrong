@@ -5,8 +5,10 @@ using UnityEngine;
 public class DataManager : Singleton<DataManager>
 {
     private readonly List<PoolType> weaponTypes = new List<PoolType>() {PoolType.Candy, PoolType.Arrow, PoolType.Axe, PoolType.Knife, PoolType.Hammer };
-    [SerializeField] private ColorData colorData;
-    [SerializeField] private List<Weapon> weapons = new List<Weapon>();
+    public ColorData colorData;
+    public HatData hatData;
+    public PantData pantData;
+    public List<Weapon> weapons = new List<Weapon>();
     public Material GetColor()
     {
         int color = Random.Range(0, colorData.colorMats.Length);

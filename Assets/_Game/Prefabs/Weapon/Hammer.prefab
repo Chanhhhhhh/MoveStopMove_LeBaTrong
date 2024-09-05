@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 5
-  weaponData: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 9dd8d6b5a8c8a864f8d7cf121f7a159f, type: 2}
   Child: {fileID: 7039561641704788861}
 --- !u!1 &7039561641704788861
 GameObject:
