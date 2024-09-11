@@ -1,13 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ButtonActiom : MonoBehaviour
+public class ButtonAction : MonoBehaviour
 {
-    UnityAction Action;
+    public UnityAction<int> Action;
+    public int index;
     RectTransform rectTransform;
 
     private void Start()
@@ -17,6 +15,6 @@ public class ButtonActiom : MonoBehaviour
 
     private void OnClick()
     {
-        Action.Invoke();
+        Action.Invoke(index);
     }
 }

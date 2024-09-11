@@ -8,6 +8,7 @@ public class DataManager : Singleton<DataManager>
     public ColorData colorData;
     public HatData hatData;
     public PantData pantData;
+    public ShieldData shieldData;
     public List<Weapon> weapons = new List<Weapon>();
     public Material GetColor()
     {

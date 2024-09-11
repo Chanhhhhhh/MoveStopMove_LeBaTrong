@@ -11,6 +11,8 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         Application.targetFrameRate= 60;
+        SaveManager.Instance.LoadData();
+        ChangeState(GameState.MainMenu);
     }
     public static void ChangeState(GameState state)
     {
@@ -18,6 +20,8 @@ public class GameManager : Singleton<GameManager>
         switch (gameState)
         {
             case GameState.MainMenu:
+                UIManager.Instance.CloseAll();
+                UIManager.Instance.OpenUI<CoinUI>();
                 UIManager.Instance.OpenUI<MainMenu>(); 
                 break;
             case GameState.ShopWeapon:
@@ -27,8 +31,11 @@ public class GameManager : Singleton<GameManager>
                 UIManager.Instance.OpenUI<ShopSkin>();
                 break;
             case GameState.GamePlay:
+                UIManager.Instance.CloseUI<CoinUI>();
                 UIManager.Instance.OpenUI<GamePlay>();
-                LevelManager.Instance.OnInit();
+                break;
+            case GameState.Setting:
+                UIManager.Instance.OpenUI<SettingUI>();
                 break;
             default:
                 break;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,27 +8,16 @@ using UnityEngine.UI;
 public class ShopWeapon : ShopBase
 {
     [SerializeField] private TextMeshProUGUI NameWeapon;
-    [SerializeField] private TextMeshProUGUI Description;
-    [SerializeField] private TextMeshProUGUI State;
-    [SerializeField] private TextMeshProUGUI Price;
-
-    [SerializeField] private Button StateBtn;
-    [SerializeField] private Button BuyBtn;
-
     [SerializeField] private Transform WeaponObj;
 
-    private int Index;
+    private int IndexWeapon;
     private int AmountWeapon;
-    private void Start()
-    {
-        Setup();
-    }
     public override void Setup()
     {
         base.Setup();
-        Index = 0;
+        IndexWeapon = 0;
         AmountWeapon = DataManager.Instance.weapons.Count;
-        ShowWeapon(Index);
+        ShowWeapon(IndexWeapon);
     }
 
     public void ShowWeapon(int index)
@@ -48,31 +38,36 @@ public class ShopWeapon : ShopBase
     }
     public void NextWeapon()
     {
-        Index++;
-        if(Index >= AmountWeapon)
+        IndexWeapon++;
+        if (IndexWeapon >= AmountWeapon)
         {
-            Index = 0;
+            IndexWeapon = 0;
         }
-        ShowWeapon(Index);
+        ShowWeapon(IndexWeapon);
 
     }
 
     public void PrevWeapon()
     {
-        Index--;
-        if(Index < 0)
+        IndexWeapon--;
+        if (IndexWeapon < 0)
         {
-            Index = AmountWeapon - 1;
+            IndexWeapon = AmountWeapon - 1;
         }
-        ShowWeapon(Index);
+        ShowWeapon(IndexWeapon);
     }
 
-    public void StateWeapon()
+    public void SelectWeapon()
     {
+        LevelManager.Instance.player.ChangeWeapon(DataManager.Instance.weapons[IndexWeapon].weaponType);
+        GameManager.ChangeState(GameState.MainMenu);
+        this.CloseDirectly();
 
     }
     public void BuyWeapon()
     {
-
+        LevelManager.Instance.player.ChangeWeapon(DataManager.Instance.weapons[IndexWeapon].weaponType);
+        GameManager.ChangeState(GameState.MainMenu);
+        this.CloseDirectly();
     }
 }

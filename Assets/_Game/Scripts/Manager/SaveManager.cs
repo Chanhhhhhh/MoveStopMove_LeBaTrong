@@ -23,14 +23,11 @@ public class SaveManager : Singleton<SaveManager>
     }
     public void SaveData()
     {
-
-        //Custom data before saving
         GameData saveData = new GameData
         {
             coin = this.Coin,
 
         };
-
         string path = Application.persistentDataPath + PATH;
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(path, json);
@@ -39,8 +36,6 @@ public class SaveManager : Singleton<SaveManager>
     public void LoadData()
     {
         string path = Application.persistentDataPath + PATH;
-
-        //Custom default data
         GameData defaultData = new GameData
         {
             coin = 0,

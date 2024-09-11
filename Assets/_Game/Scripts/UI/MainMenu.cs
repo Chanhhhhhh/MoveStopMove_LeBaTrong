@@ -6,16 +6,21 @@ public class MainMenu : UICanvas
 {
     public void OnPlay()
     {
+        
         GameManager.ChangeState(GameState.GamePlay);
+        LevelManager.Instance.OnInit();
+        this.CloseDirectly();
     }
 
     public void OpenShopWeapon()
     {
         GameManager.ChangeState(GameState.ShopWeapon);
+        this.CloseDirectly() ;
     }
 
     public void OpenShopSkin()
     {
-
+        GameManager.ChangeState(GameState.ShopSkin);
+        this.CloseDirectly() ;
     }
 }

@@ -30,17 +30,22 @@ public class LevelManager : Singleton<LevelManager>
         new ScoreRate(18, 2f,6),
         new ScoreRate(22, 2.2f,7),
     };
+    public Player player;
     private List<Character> enemyList = new List<Character>();
-    public int MaxAmountEnemy = 10;
-    public int EnemyAmount = 4;
+    public int AmountEnemy = 10;
+    public int MaxEnemy = 4;
     public int countEnemy;
 
     public void OnInit()
     {
-        for (int i = 0;i < EnemyAmount;i++)
+        countEnemy = 0;
+        player.OnInit();
+        player.TurnOnCircle();
+        for (int i = 0;i < MaxEnemy;i++)
         {
             SpawnEnemy();
-        }    
+        }
+        SetAliveUI();
     }
     public Vector3 GetRandomPoint(Vector3 center, float radius)
     {
@@ -59,6 +64,7 @@ public class LevelManager : Singleton<LevelManager>
         if (enemyList.Contains(victim))
         {
             enemyList.Remove(victim);
+            SetAliveUI();
         }
         owner.UpLevel(victim.DeadScore);
         victim.OnDespawn();
@@ -71,18 +77,19 @@ public class LevelManager : Singleton<LevelManager>
     }
     public void SpawnEnemy()
     {
-        if(countEnemy >= MaxAmountEnemy)
+        if(countEnemy >= AmountEnemy)
         {
             return;
         }
-        if(enemyList.Count < EnemyAmount)
+        if(enemyList.Count < MaxEnemy)
         {
             countEnemy++;
             Vector3 SpawnPos = GetRandomPoint(Vector3.zero, 40f); 
             Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, SpawnPos, Quaternion.identity);
             enemyList.Add(newEnemy);
-            newEnemy.OnInit();
+            newEnemy.OnInit();        
         }
+        SetAliveUI();
     }
 
     public ScoreRate GetScoreRate(int level)
@@ -100,5 +107,27 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
         return result;
+    }
+
+    internal void ClearLevel()
+    {
+        countEnemy = 0;
+        enemyList.Clear();
+        SimplePool.CollectAll();
+        player.OnInit();
+    }
+
+    internal int RandomLevel()
+    {
+        if(player.Level <= 2)
+        {
+            return Random.Range(0, 3);
+        }
+        return Random.Range(player.Level - 2, player.Level + 2);
+    }
+
+    public void SetAliveUI()
+    {
+        UIManager.Instance.GetUI<GamePlay>().SetAlive(AmountEnemy - countEnemy + enemyList.Count);
     }
 }

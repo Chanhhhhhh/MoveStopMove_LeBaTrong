@@ -6,6 +6,11 @@ public class CircleAttack : MonoBehaviour
 {
     [SerializeField] private LineRenderer lineRenderer;
     private int steps = 200;
+
+    public void ClearCircle()
+    {
+        lineRenderer.positionCount = 0;
+    }
     public void DrawCircle(float radius)
     {
         lineRenderer.useWorldSpace = false;

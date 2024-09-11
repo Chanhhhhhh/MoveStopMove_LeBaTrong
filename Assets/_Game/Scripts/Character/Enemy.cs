@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,32 +14,30 @@ public class Enemy : Character
     public StateMachine<Enemy> EnemyStateMachine;
 
     [SerializeField] private GameObject focus;
-    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.03f;
-    private Vector3 Destination;
     [SerializeField] private NavMeshAgent NavMeshAgent;
 
-    public override void OnInit()
+    private Vector3 Destination;
+    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.03f;
 
+    public override void OnInit()
     {
         CharName = Constant.GetName();
         GetTargetIndicator();
-        base.OnInit();    
+        RandomItemSkin();
+        base.OnInit();
+        UpLevel(LevelManager.Instance.RandomLevel());
         EnemyStateMachine.ChangeState(EnemyMoveState);
-
-
     }
     public override void OnDespawn()
     {
         base.OnDespawn();
         TargetIndicator.OnDespawn();
         EnemyStateMachine.ChangeState(EnemyDeadState);
-
     }
 
     private void Update()
     {
-        EnemyStateMachine.ExecuteState();
-        
+        EnemyStateMachine.ExecuteState();      
     }
 
     public void SetDestination(Vector3 Pos)
@@ -68,5 +63,31 @@ public class Enemy : Character
     public void SetActiveFocus(bool IsFocus)
     {
 
+    }
+
+    public void RandomItemSkin()
+    {    
+        // Pant
+        MeshBody.material = DataManager.Instance.GetColor();
+        currentPant = DataManager.Instance.pantData.PantDatas[Random.Range(0, DataManager.Instance.pantData.PantDatas.Length)].PantMaterial;
+        pantRen.material = currentPant;
+
+        // Hat
+        if(currentHat != null)
+        {
+            Destroy(currentHat.gameObject);
+        }
+        currentHat = Instantiate(DataManager.Instance.hatData.hatDatas[Random.Range(0, DataManager.Instance.hatData.hatDatas.Length)].HatPrefabs, hatPoint);
+
+        //Shield
+        int count = DataManager.Instance.shieldData.ShieldDatas.Length;
+        int rand = Random.Range(0, count + 5);
+        if(rand < count)
+        {
+            currentShield = Instantiate(DataManager.Instance.shieldData.ShieldDatas[rand].ShieldPrefabs, shieldPoint);
+        }
+
+        // Weapon
+        ChangeWeapon(DataManager.Instance.RandomWeapon());
     }
 }

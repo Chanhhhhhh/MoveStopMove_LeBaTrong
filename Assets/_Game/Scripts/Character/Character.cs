@@ -12,24 +12,32 @@ public abstract class Character : GameUnit
     [SerializeField] private Collider col;
     [SerializeField] protected Transform IndicatorOffset;
     [SerializeField] protected Transform weaponPoint;
-    [SerializeField] protected Renderer Mesh;
+
+    [SerializeField] protected Renderer MeshBody;
 
     protected string CharName;
     protected float Speed;
     protected bool IsWeapon;
     protected TargetIndicator TargetIndicator;
-    protected int level;
     protected float currentScale;
     protected Weapon weapon;
     protected PoolType weaponType;
     protected Character Target;
-
     protected float rangeAttack;
+    protected int level;
+    public int Level => level;
 
     private string currentAnim;
     private CounterTime counterTime = new CounterTime();
     public CounterTime CounterTime => counterTime;
+
     public int DeadScore;
+    public GameObject currentHat;
+    public Material currentPant;
+    public GameObject currentShield;
+    public Transform hatPoint;
+    public Renderer pantRen;
+    public Transform shieldPoint;
 
 
 
@@ -40,9 +48,8 @@ public abstract class Character : GameUnit
         Speed = Constant.SPEED_DEFAULT;
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT;
         level = 0;
-        UpLevel(0);
-        Mesh.material = DataManager.Instance.GetColor();
-        ChangeWeapon(DataManager.Instance.RandomWeapon());
+        Target = null;
+        counterTime.OnCancel();
     }
 
     public abstract void Attack();

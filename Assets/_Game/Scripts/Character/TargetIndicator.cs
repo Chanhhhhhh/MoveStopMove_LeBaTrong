@@ -7,15 +7,12 @@ public class TargetIndicator : GameUnit
     public Transform Target;
     public TextMeshProUGUI textName;
 
-
     [SerializeField] private Image Icon;
-
-    [SerializeField] private TextMeshProUGUI textLevel;
-     
+    [SerializeField] private TextMeshProUGUI textLevel;   
     [SerializeField] private Image arrow; 
-    private RectTransform rect; 
     [SerializeField] private GameObject follow;
 
+    private RectTransform rect;
     private float Offset = 2f;
 
     private void Start()
@@ -59,6 +56,7 @@ public class TargetIndicator : GameUnit
     }
     public override void OnInit()
     {
+        this.transform.SetParent(UIManager.Instance.GetUI<GamePlay>().TargetIndicatorContent);
         Color color = new Color(Random.value, Random.value, Random.value,1);
         Icon.color = color;
         textName.color = color;

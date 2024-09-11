@@ -12,14 +12,18 @@ public class Player : Character
     {
         GetTargetIndicator();
         base.OnInit();
-        circleAttack.DrawCircle(rangeAttack);
-    }
-    private void Start()
-    {        
-        OnInit();
+        UpLevel(0);
+        circleAttack.ClearCircle();
+        this.TF.position = Vector3.zero;
+        ChangeAnim(Constant.IDLE_ANIM_STRING);
+        
     }
     private void Update()
-    {     
+    {
+        if (!GameManager.IsState(GameState.GamePlay))
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             CounterTime.OnCancel();
@@ -80,4 +84,14 @@ public class Player : Character
         base.UpLevel(score);
         Cache.MainCamera.DOOrthoSize(9.5f * currentScale, 1f);
     }
+
+    public void TurnOnCircle()
+    {
+        circleAttack.DrawCircle(rangeAttack);
+    }
+
+
+
+
+
 }
