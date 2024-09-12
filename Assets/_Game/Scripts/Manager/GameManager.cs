@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,7 +17,7 @@ public class GameManager : Singleton<GameManager>
         gameState = state;
         switch (gameState)
         {
-            case GameState.MainMenu:
+            case GameState.MainMenu:  
                 UIManager.Instance.CloseAll();
                 UIManager.Instance.OpenUI<CoinUI>();
                 UIManager.Instance.OpenUI<MainMenu>(); 
@@ -37,10 +35,18 @@ public class GameManager : Singleton<GameManager>
             case GameState.Setting:
                 UIManager.Instance.OpenUI<SettingUI>();
                 break;
+            case GameState.Win:
+                UIManager.Instance.CloseAll();
+                UIManager.Instance.OpenUI<WinUI>();
+                break;
+            case GameState.Lose:
+                UIManager.Instance.CloseAll();
+                UIManager.Instance.OpenUI<LoseUI>();
+                break;
             default:
                 break;
         }
-
+        Camerafollow.Instance.SwitchCamera(gameState);
         OnGameStateChange?.Invoke(state);
     }
     public static bool IsState(GameState state)

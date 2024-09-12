@@ -49,7 +49,7 @@ public class Enemy : Character
 
     public override void Attack()
     {
-
+        ChangeAnim(IsUlti ? Constant.ULTI_ANIM_STRING : Constant.ATTACK_ANIM_STRING);
     }
 
     public override void GetTargetIndicator()

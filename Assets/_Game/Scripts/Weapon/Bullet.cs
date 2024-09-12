@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Bullet : GameUnit
@@ -10,7 +9,7 @@ public class Bullet : GameUnit
 
     protected Vector3 StartPos;
     protected float Distance;
-    protected float Speed = 8f;
+    protected float Speed;
 
     [SerializeField] protected Transform Child;
     
@@ -22,11 +21,18 @@ public class Bullet : GameUnit
 
     public override void OnDespawn()
     {
-        owner.WeaponState(true);
+        owner.EndAttack();
         SimplePool.Despawn(this);
     }
-    public void SetUp(Character character, Transform target, float Distance)
+    public void SetUp(Character character, Transform target, float Distance, bool IsUlti)
     {
+        TF.localScale = Vector3.one;
+        Speed = Constant.SPEED_BULLET;
+        if (IsUlti)
+        {
+            TF.DOScale(Vector3.one * 2, 1f);
+            Speed = Constant.SPEED_BULLET * 2;
+        }        
         this.owner = character;
         this.target = target;
         this.Distance = Distance;
@@ -37,6 +43,7 @@ public class Bullet : GameUnit
     {
         if (other.CompareTag(Constant.TAG_PLAYER) && other.gameObject != owner.gameObject)
         {
+            LevelManager.Instance.SetLose(this.owner);
             OnDespawn();
         }
 

@@ -1,18 +1,60 @@
+using Cinemachine;
 using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class Camerafollow : MonoBehaviour
+public class Camerafollow : Singleton<Camerafollow>
 {
-    public Transform TF;
-    public Transform playerTF;
+    public CinemachineVirtualCamera MainMenuCamera;
+    public CinemachineVirtualCamera ShopSkinCamera;
+    public CinemachineVirtualCamera GamePlayCamera;
+    private List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
+    private CinemachineVirtualCamera ActiveCamera = null;
 
-    [SerializeField] Vector3 offset;
-
-    private void LateUpdate()
-    {      
-        TF.position = Vector3.Lerp(TF.position, playerTF.transform.position + offset, Time.deltaTime * 8f);
+    private void Start()
+    {
+        cameras.Add(MainMenuCamera);
+        cameras.Add(ShopSkinCamera);
+        cameras.Add(GamePlayCamera);
     }
 
+    public void SwitchCamera(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.MainMenu:
+                LevelManager.Instance.player.ChangeAnim(Constant.IDLE_ANIM_STRING);
+                ActiveCamera = MainMenuCamera;
+                break;
+            case GameState.ShopSkin:
+                LevelManager.Instance.player.ChangeAnim(Constant.DANCE_ANIM_STRING);
+                ActiveCamera = ShopSkinCamera;
+                break;
+            case GameState.GamePlay:
+                ActiveCamera = GamePlayCamera;
+                break;
+            case GameState.Win:
+                LevelManager.Instance.player.ChangeAnim(Constant.WIN_ANIM_STRING);
+                ActiveCamera = MainMenuCamera;
+                break;
+            default:
+                return;
+        }
+        ActiveCamera.Priority = 10; 
+        foreach (CinemachineVirtualCamera camera in cameras)
+        {
+            if (camera != ActiveCamera)
+            {
+                camera.Priority = 0;
+            }
+        }
+    }
+
+    internal void ScaleCamera(float currentScale)
+    {
+        //float target = Constant.DEFAULT_SIZE_CAMERA * currentScale;
+        //DOTween.To(() => GamePlayCamera.m_Lens.OrthographicSize,
+        //          x => GamePlayCamera.m_Lens.OrthographicSize = x,
+        //          target,
+        //          1f);
+    }
 }

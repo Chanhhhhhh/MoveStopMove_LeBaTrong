@@ -12,8 +12,7 @@ public class EnemyAttackState : IState<Enemy>
         owner.RotateTarget();
         attackTime = Constant.DELAY_TIME_ATTACK;
         IsAttacked = false;
-        owner.ChangeAnim(Constant.ATTACK_ANIM_STRING);
-
+        owner.Attack();
     }
 
     public void Execute(Enemy owner)

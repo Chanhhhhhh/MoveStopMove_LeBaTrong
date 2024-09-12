@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -83,6 +82,7 @@ public class ShopSkin : ShopBase
     }
     private void OpenShopView(ShopType shopType)
     {
+        indexSelected = -1;
         ClearTryOnItem();
         if(currentShop == shopType)
         {
@@ -126,6 +126,15 @@ public class ShopSkin : ShopBase
         {
             Destroy(HatSelected.gameObject);
         }
+        if(player.currentShield != null)
+        {
+            player.currentShield.gameObject.SetActive(true);
+        }
+        if(ShieldSelected != null)
+        {
+            Destroy(ShieldSelected.gameObject);
+        }
+        
         player.pantRen.material = player.currentPant;
     }
 
@@ -172,7 +181,8 @@ public class ShopSkin : ShopBase
             return;
         }
         indexSelected = indexHat;
-        if(HatSelected != null)
+
+        if (HatSelected != null)
         {
             Destroy(HatSelected.gameObject);
         }
@@ -198,6 +208,7 @@ public class ShopSkin : ShopBase
             return;
         }
         indexSelected = indexPant;
+
         PantSelected = DataManager.Instance.pantData.PantDatas[indexPant].PantMaterial;
         player.pantRen.material = PantSelected;
     }

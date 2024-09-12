@@ -1,10 +1,9 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : Character
 {
+    private CounterTime counterTime = new CounterTime();
+    public CounterTime CounterTime => counterTime;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private CircleAttack circleAttack;
 
@@ -16,7 +15,14 @@ public class Player : Character
         circleAttack.ClearCircle();
         this.TF.position = Vector3.zero;
         ChangeAnim(Constant.IDLE_ANIM_STRING);
+        counterTime.OnCancel();
         
+    }
+    public override void OnDespawn()
+    {
+        base.OnDespawn();
+        ColliderState(false);
+        ChangeAnim(Constant.DIE_ANIM_STRING);
     }
     private void Update()
     {
@@ -57,8 +63,7 @@ public class Player : Character
             {
                 ChangeAnim(Constant.IDLE_ANIM_STRING);
                 RotateTarget();
-                Attack();
-                ChangeAnim(Constant.ATTACK_ANIM_STRING);
+                Attack();                
             }
 
 
@@ -67,6 +72,7 @@ public class Player : Character
 
     public override void Attack()
     {
+        ChangeAnim(IsUlti ? Constant.ULTI_ANIM_STRING : Constant.ATTACK_ANIM_STRING);
         IsWeapon = false;
         CounterTime.OnStart(Throw, Constant.DELAY_TIME_ATTACK);
     }
@@ -82,15 +88,30 @@ public class Player : Character
     public override void UpLevel(int score)
     {
         base.UpLevel(score);
-        Cache.MainCamera.DOOrthoSize(9.5f * currentScale, 1f);
+        Camerafollow.Instance.ScaleCamera(currentScale);
     }
 
     public void TurnOnCircle()
     {
+        if (IsUlti)
+        {
+            circleAttack.DrawCircle(UltiRangedAttack);
+            return;
+        }
         circleAttack.DrawCircle(rangeAttack);
     }
 
+    internal override void BuffUlti()
+    {
+        base.BuffUlti();
+        TurnOnCircle();
+    }
 
+    public override void EndAttack()
+    {
+        base.EndAttack();
+        TurnOnCircle();
+    }
 
 
 

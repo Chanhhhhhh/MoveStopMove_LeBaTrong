@@ -1,7 +1,4 @@
-using DG.Tweening;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,22 +12,23 @@ public abstract class Character : GameUnit
 
     [SerializeField] protected Renderer MeshBody;
 
-    protected string CharName;
+    
     protected float Speed;
     protected bool IsWeapon;
+    protected bool IsUlti;
     protected TargetIndicator TargetIndicator;
     protected float currentScale;
     protected Weapon weapon;
     protected PoolType weaponType;
     protected Character Target;
     protected float rangeAttack;
+    protected float UltiRangedAttack;
     protected int level;
     public int Level => level;
-
     private string currentAnim;
-    private CounterTime counterTime = new CounterTime();
-    public CounterTime CounterTime => counterTime;
 
+
+    public string CharName;
     public int DeadScore;
     public GameObject currentHat;
     public Material currentPant;
@@ -43,13 +41,13 @@ public abstract class Character : GameUnit
 
     public override void OnInit()
     {
+        IsUlti = false;
         IsWeapon = true;
         col.enabled = true;
         Speed = Constant.SPEED_DEFAULT;
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT;
         level = 0;
         Target = null;
-        counterTime.OnCancel();
     }
 
     public abstract void Attack();
@@ -85,10 +83,14 @@ public abstract class Character : GameUnit
         }
     }
 
-    public void WeaponState(bool isWeapon)
+    public virtual void EndAttack()
     {
-        this.IsWeapon = isWeapon;
+        this.IsWeapon = true;
         weapon.OnChild();
+        if (IsUlti)
+        {
+            IsUlti = false;
+        }       
     }
 
     public void ColliderState(bool state)
@@ -101,13 +103,15 @@ public abstract class Character : GameUnit
         Bullet newBullet = SimplePool.Spawn<Bullet>(weaponType, TF.position + Vector3.up + TF.forward, TF.rotation);
         if(newBullet != null )
         {
-            newBullet.SetUp(this, this.Target.TF, this.rangeAttack);
+            newBullet.SetUp(this, this.Target.TF, ChooseRangeAttack(), IsUlti);
         }
     }
 
+
+
     public bool CheckTarget()
     {
-        Collider[] colliders = Physics.OverlapSphere(TF.position, rangeAttack, CharacterLayer);
+        Collider[] colliders = Physics.OverlapSphere(TF.position, ChooseRangeAttack(), CharacterLayer);
         colliders = colliders.OrderBy(x => Vector3.Distance(x.bounds.center, TF.position)).ToArray();
         if(colliders.Length > 1 )
         {
@@ -136,4 +140,19 @@ public abstract class Character : GameUnit
         this.TF.localScale = Vector3.one * currentScale;
     }
 
+    internal virtual void BuffUlti()
+    {
+        if (IsUlti)
+        {
+            return;
+        }
+        IsUlti = true;
+        UltiRangedAttack = rangeAttack * 1.5f;
+
+    }
+
+    public float ChooseRangeAttack()
+    {
+        return IsUlti ? UltiRangedAttack : rangeAttack;
+    }
 }

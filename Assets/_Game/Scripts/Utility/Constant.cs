@@ -8,11 +8,16 @@ public class Constant
     public static readonly string IDLE_ANIM_STRING = "idle";
     public static readonly string ATTACK_ANIM_STRING = "attack";
     public static readonly string DIE_ANIM_STRING = "die";
+    public static readonly string DANCE_ANIM_STRING = "dance";
+    public static readonly string WIN_ANIM_STRING = "win";
+    public static readonly string ULTI_ANIM_STRING = "ulti";
 
+    public const float DEFAULT_SIZE_CAMERA = 12f;
     public const float DELAY_TIME_ATTACK = 0.5f;
     public const float DELAY_TIME_DEAD = 1f;
     public const float SPEED_DEFAULT = 8f;
     public const float RANGE_ATTACK_DEFAULT = 5f;
+    public const float SPEED_BULLET = 8f;
 
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
