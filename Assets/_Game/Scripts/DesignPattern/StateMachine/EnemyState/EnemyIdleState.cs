@@ -18,7 +18,10 @@ public class EnemyIdleState : IState<Enemy>
         IdleTime -= Time.deltaTime;
         if (owner.CheckTarget())
         {
-            owner.EnemyStateMachine.ChangeState(owner.EnemyAttackState);
+            if(owner.Target != null)
+            {
+               owner.EnemyStateMachine.ChangeState(owner.EnemyAttackState);
+            }
         }
         if (IdleTime < 0)
         {

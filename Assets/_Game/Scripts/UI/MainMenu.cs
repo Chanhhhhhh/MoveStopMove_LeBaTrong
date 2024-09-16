@@ -6,9 +6,8 @@ public class MainMenu : UICanvas
 {
     public void OnPlay()
     {
-        
-        GameManager.ChangeState(GameState.GamePlay);
         LevelManager.Instance.OnInit();
+        GameManager.ChangeState(GameState.GamePlay);
         this.CloseDirectly();
     }
 

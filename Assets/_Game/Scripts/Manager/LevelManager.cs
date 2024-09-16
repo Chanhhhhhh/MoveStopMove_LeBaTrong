@@ -32,7 +32,7 @@ public class LevelManager : Singleton<LevelManager>
     };
     [SerializeField] private GameObject[] giftBoxes;
     public GameObject giftbox;
-    private float RadiusMap = 40f;
+    private float RadiusMap = 60f;
     private List<Character> enemyList = new List<Character>();
 
 
@@ -46,12 +46,19 @@ public class LevelManager : Singleton<LevelManager>
     {
         IsEnd = false;
         countEnemy = 0;
+
+        // player
         player.OnInit();
+        player.GetTargetIndicator();
+        player.UpLevel(0);
         player.TurnOnCircle();
+
+        // enemy
         for (int i = 0;i < MaxEnemy;i++)
         {
             SpawnEnemy();
         }
+
         SetAliveUI();
         SpawnGiftBox();
     }
@@ -94,12 +101,14 @@ public class LevelManager : Singleton<LevelManager>
         {
             return;
         }
-        if(enemyList.Count < MaxEnemy)
+
+        if (enemyList.Count < MaxEnemy)
         {
+            int countSpawn = 0;
+            Vector3 SpawnPos = GetRandomPoint(player.transform.position, RadiusMap);
             countEnemy++;
-            Vector3 SpawnPos = GetRandomPoint(Vector3.zero , RadiusMap); 
             Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, SpawnPos, Quaternion.identity);
-            enemyList.Add(newEnemy);
+            enemyList.Add(newEnemy); 
             newEnemy.OnInit();        
         }
         SetAliveUI();
@@ -124,6 +133,7 @@ public class LevelManager : Singleton<LevelManager>
 
     internal void ClearLevel()
     {
+        
         if(giftbox != null)
         {
             giftbox.SetActive(false);

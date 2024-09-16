@@ -15,6 +15,28 @@ public class ShopBase : UICanvas
     public virtual void OnExit()
     {      
         GameManager.ChangeState(GameState.MainMenu);
-        this.CloseDirectly();
+    }
+
+    public virtual void SetStateItem(int state, int price)
+    {
+        StateBtn.gameObject.SetActive(false);
+        BuyBtn.gameObject.SetActive(false);
+        switch (state)
+        {
+            case 0:
+                StateBtn.gameObject.SetActive(true);
+                State.text = Constant.STRING_EQUIPED;
+                break;
+            case 1:
+                StateBtn.gameObject.SetActive(true);
+                State.text = Constant.STRING_SELECT;
+                break;
+            case 2:
+                BuyBtn.gameObject.SetActive(true);
+                Price.text = price.ToString();
+                break;
+            default:
+                break;
+        }
     }
 }

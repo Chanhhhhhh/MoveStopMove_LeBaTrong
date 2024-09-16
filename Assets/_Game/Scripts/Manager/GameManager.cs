@@ -10,7 +10,9 @@ public class GameManager : Singleton<GameManager>
     {
         Application.targetFrameRate= 60;
         SaveManager.Instance.LoadData();
+        DataManager.Instance.OnInit();
         ChangeState(GameState.MainMenu);
+        LevelManager.Instance.player.GetSaveItem();
     }
     public static void ChangeState(GameState state)
     {

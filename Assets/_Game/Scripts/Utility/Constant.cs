@@ -13,15 +13,19 @@ public class Constant
     public static readonly string ULTI_ANIM_STRING = "ulti";
 
     public const float DEFAULT_SIZE_CAMERA = 12f;
-    public const float DELAY_TIME_ATTACK = 0.5f;
+    public const float DELAY_TIME_ATTACK = 0.45f;
     public const float DELAY_TIME_DEAD = 1f;
+    public const float TIME_COOLDOWN = 1.5f;
     public const float SPEED_DEFAULT = 8f;
-    public const float RANGE_ATTACK_DEFAULT = 5f;
-    public const float SPEED_BULLET = 8f;
+    public const float RANGE_ATTACK_DEFAULT = 6f;
+    public const float SPEED_BULLET = 10f;
 
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
     public const string TAG_COIN = "coin";
+
+    public const string STRING_EQUIPED = "EQUIPED";
+    public const string STRING_SELECT = "SELECT";
 
     public static List<string> names = new List<string>
        {

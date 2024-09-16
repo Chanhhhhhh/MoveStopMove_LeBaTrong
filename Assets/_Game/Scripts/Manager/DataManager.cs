@@ -9,7 +9,16 @@ public class DataManager : Singleton<DataManager>
     public HatData hatData;
     public PantData pantData;
     public ShieldData shieldData;
-    public List<Weapon> weapons = new List<Weapon>();
+    public Dictionary<ShopState, SkinData> skinDataDic = new Dictionary<ShopState, SkinData>();
+    public List<Weapon> weapons;
+    
+
+    public void OnInit()
+    {
+        skinDataDic.Add(ShopState.HatShop, hatData);
+        skinDataDic.Add(ShopState.PantShop, pantData);
+        skinDataDic.Add(ShopState.ShieldShop, shieldData);
+    }
     public Material GetColor()
     {
         int color = Random.Range(0, colorData.colorMats.Length);

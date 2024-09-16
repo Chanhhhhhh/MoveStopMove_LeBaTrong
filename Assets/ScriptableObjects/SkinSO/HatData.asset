@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80415298d5be1b4d8399b3b2a07ece1, type: 3}
   m_Name: HatData
   m_EditorClassIdentifier: 
+  Price: 500
+  ValueBonus: 5
   hatDatas:
   - HatPrefabs: {fileID: 4106648552995376773, guid: 7a1bf0c812026104585671ac1bf51cc2, type: 3}
     Image: {fileID: 21300000, guid: eb69cff6254433d4e9c38084ef04f590, type: 3}
@@ -31,5 +33,3 @@ MonoBehaviour:
     Image: {fileID: 21300000, guid: 578c1840f64bd634bad62c6f60eba249, type: 3}
   - HatPrefabs: {fileID: 3470880689559796705, guid: 550de46e5a3613d4385375df80f42264, type: 3}
     Image: {fileID: 21300000, guid: afbe2aeef5262db48ac8ac1124dfd412, type: 3}
-  Price: 500
-  RangeBonus: 5

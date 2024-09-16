@@ -12,8 +12,6 @@ public class Enemy : Character
     #endregion
 
     public StateMachine<Enemy> EnemyStateMachine;
-
-    [SerializeField] private GameObject focus;
     [SerializeField] private NavMeshAgent NavMeshAgent;
 
     private Vector3 Destination;
@@ -26,7 +24,7 @@ public class Enemy : Character
         RandomItemSkin();
         base.OnInit();
         UpLevel(LevelManager.Instance.RandomLevel());
-        EnemyStateMachine.ChangeState(EnemyMoveState);
+        EnemyStateMachine.ChangeState(EnemyIdleState);
     }
     public override void OnDespawn()
     {
@@ -37,6 +35,7 @@ public class Enemy : Character
 
     private void Update()
     {
+        TimeCountdownAttack -= Time.deltaTime;
         EnemyStateMachine.ExecuteState();      
     }
 
@@ -80,6 +79,10 @@ public class Enemy : Character
         currentHat = Instantiate(DataManager.Instance.hatData.hatDatas[Random.Range(0, DataManager.Instance.hatData.hatDatas.Length)].HatPrefabs, hatPoint);
 
         //Shield
+        if(currentShield != null)
+        {
+            Destroy(currentShield.gameObject);
+        }
         int count = DataManager.Instance.shieldData.ShieldDatas.Length;
         int rand = Random.Range(0, count + 5);
         if(rand < count)

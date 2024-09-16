@@ -15,7 +15,7 @@ public class ShopWeapon : ShopBase
     public override void Setup()
     {
         base.Setup();
-        IndexWeapon = 0;
+        IndexWeapon = SaveManager.Instance.WeaponStates.currentItem;
         AmountWeapon = DataManager.Instance.weapons.Count;
         ShowWeapon(IndexWeapon);
     }
@@ -33,6 +33,7 @@ public class ShopWeapon : ShopBase
         {
             NameWeapon.text = weaponData.NameWeapon;
             Description.text = weaponData.Description;
+            SetStateItem(SaveManager.Instance.WeaponStates.ItemStates[index], weaponData.Price);
         }
 
     }
@@ -59,15 +60,33 @@ public class ShopWeapon : ShopBase
 
     public void SelectWeapon()
     {
-        LevelManager.Instance.player.ChangeWeapon(DataManager.Instance.weapons[IndexWeapon].weaponType);
+        if(IndexWeapon == SaveManager.Instance.WeaponStates.currentItem)
+        {
+            return;
+        }
+        LevelManager.Instance.player.ChangeWeapon(IndexWeapon);
+        SaveWeapon();
         GameManager.ChangeState(GameState.MainMenu);
         this.CloseDirectly();
 
     }
+     
     public void BuyWeapon()
     {
-        LevelManager.Instance.player.ChangeWeapon(DataManager.Instance.weapons[IndexWeapon].weaponType);
-        GameManager.ChangeState(GameState.MainMenu);
-        this.CloseDirectly();
+        int price = DataManager.Instance.weapons[IndexWeapon].weaponData.Price;
+        if (SaveManager.Instance.Coin < price)
+        {
+            return;
+        }
+        LevelManager.Instance.player.ChangeWeapon(IndexWeapon);
+        SaveWeapon();
+        UIManager.Instance.GetUI<CoinUI>().SetCoin(SaveManager.Instance.Coin -= price);
+        StateBtn.gameObject.SetActive(true);
+        BuyBtn.gameObject.SetActive(false);
+        State.text = Constant.STRING_EQUIPED;
+    }
+    private void SaveWeapon()
+    {
+        SaveManager.Instance.WeaponStates.SaveItem(IndexWeapon);
     }
 }

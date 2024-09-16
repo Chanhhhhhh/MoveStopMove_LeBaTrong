@@ -14,7 +14,8 @@ public class LoseUI : UICanvas
     }
     public void TouchToContinue()
     {
-        GameManager.ChangeState(GameState.MainMenu);
         LevelManager.Instance.ClearLevel();
+        GameManager.ChangeState(GameState.MainMenu);
+       
     }
 }

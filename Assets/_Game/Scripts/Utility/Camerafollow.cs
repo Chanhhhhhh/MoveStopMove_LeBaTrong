@@ -1,6 +1,7 @@
 using Cinemachine;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class Camerafollow : Singleton<Camerafollow>
 {
@@ -51,10 +52,10 @@ public class Camerafollow : Singleton<Camerafollow>
 
     internal void ScaleCamera(float currentScale)
     {
-        //float target = Constant.DEFAULT_SIZE_CAMERA * currentScale;
-        //DOTween.To(() => GamePlayCamera.m_Lens.OrthographicSize,
-        //          x => GamePlayCamera.m_Lens.OrthographicSize = x,
-        //          target,
-        //          1f);
+        float target = Constant.DEFAULT_SIZE_CAMERA * currentScale;
+        DOTween.To(() => GamePlayCamera.m_Lens.OrthographicSize,
+                  x => GamePlayCamera.m_Lens.OrthographicSize = x,
+                  target,
+                  1f);
     }
 }

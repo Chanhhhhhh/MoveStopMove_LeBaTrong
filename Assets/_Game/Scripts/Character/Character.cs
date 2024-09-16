@@ -20,13 +20,13 @@ public abstract class Character : GameUnit
     protected float currentScale;
     protected Weapon weapon;
     protected PoolType weaponType;
-    protected Character Target;
     protected float rangeAttack;
     protected float UltiRangedAttack;
     protected int level;
     public int Level => level;
+    protected float TimeCountdownAttack;
     private string currentAnim;
-
+    public Character Target;
 
     public string CharName;
     public int DeadScore;
@@ -48,6 +48,7 @@ public abstract class Character : GameUnit
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT;
         level = 0;
         Target = null;
+        TimeCountdownAttack = 0f;
     }
 
     public abstract void Attack();
@@ -65,6 +66,20 @@ public abstract class Character : GameUnit
         weapon.transform.localRotation = Quaternion.identity;
         weapon.transform.localScale = Vector3.one;
 
+    }
+
+    public void ChangeWeapon(int weaponIndex)
+    {
+        foreach (Transform child in weaponPoint)
+        {
+            Destroy(child.gameObject);
+        }
+        this.weaponType = DataManager.Instance.weapons[weaponIndex].weaponType;
+        this.weapon = Instantiate(DataManager.Instance.weapons[weaponIndex]);
+        this.weapon.transform.SetParent(weaponPoint);
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+        weapon.transform.localScale = Vector3.one;
     }
 
     public override void OnDespawn()
@@ -99,11 +114,12 @@ public abstract class Character : GameUnit
     }
     public void Throw()
     {
+        TimeCountdownAttack = Constant.TIME_COOLDOWN;
         weapon.OffChild();
         Bullet newBullet = SimplePool.Spawn<Bullet>(weaponType, TF.position + Vector3.up + TF.forward, TF.rotation);
         if(newBullet != null )
         {
-            newBullet.SetUp(this, this.Target.TF, ChooseRangeAttack(), IsUlti);
+            newBullet.SetUp(this, this.Target.TF, ChooseRangeAttack(),currentScale, IsUlti);
         }
     }
 
@@ -112,10 +128,14 @@ public abstract class Character : GameUnit
     public bool CheckTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(TF.position, ChooseRangeAttack(), CharacterLayer);
-        colliders = colliders.OrderBy(x => Vector3.Distance(x.bounds.center, TF.position)).ToArray();
+        colliders = colliders.OrderBy(x => Vector3.Distance(x.transform.position, TF.position)).ToArray();
         if(colliders.Length > 1 )
         {
             this.Target = Cache.GetCharacter(colliders[1]);
+        }
+        else
+        {
+            this.Target = null;
         }
         return colliders.Length > 1;
     }

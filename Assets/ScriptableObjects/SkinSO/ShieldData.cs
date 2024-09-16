@@ -10,10 +10,8 @@ public class Shield
 }
 
 [CreateAssetMenu(fileName = "ShieldData", menuName = "ScriptableObjects/ShieldData", order = 4)]
-public class ShieldData : ScriptableObject
+public class ShieldData : SkinData
 {
     public Shield[] ShieldDatas;
-    public int price;
-    public int GoldBonus;
 
 }

@@ -8,10 +8,9 @@ public class Player : Character
     [SerializeField] private CircleAttack circleAttack;
 
     public override void OnInit()
-    {
-        GetTargetIndicator();
+    {     
+
         base.OnInit();
-        UpLevel(0);
         circleAttack.ClearCircle();
         this.TF.position = Vector3.zero;
         ChangeAnim(Constant.IDLE_ANIM_STRING);
@@ -26,6 +25,7 @@ public class Player : Character
     }
     private void Update()
     {
+        TimeCountdownAttack -= Time.deltaTime;
         if (!GameManager.IsState(GameState.GamePlay))
         {
             return;
@@ -55,12 +55,18 @@ public class Player : Character
 
         if (!Input.GetMouseButton(0))
         {
-            if (!CheckTarget())
+            
+            if (!CheckTarget()) 
             {
                 return;
             }
-            if (IsWeapon && Target != null )
+            if (IsWeapon && Target != null && TimeCountdownAttack <= 0)
             {
+                if(Vector3.Distance(Target.TF.position, TF.position) > rangeAttack)
+                {
+                    Target = null;
+                    return;
+                }
                 ChangeAnim(Constant.IDLE_ANIM_STRING);
                 RotateTarget();
                 Attack();                
@@ -85,6 +91,28 @@ public class Player : Character
         TargetIndicator.OnInit();
     }
 
+    public void GetSaveItem()
+    {
+        OnInit();
+        ChangeWeapon(SaveManager.Instance.WeaponStates.currentItem);
+        int pant = SaveManager.Instance.PantStates.currentItem;
+        if(pant >= 0)
+        {
+            currentPant = DataManager.Instance.pantData.PantDatas[pant].PantMaterial;
+            pantRen.material = currentPant;
+        }
+        int hat = SaveManager.Instance.HatStates.currentItem;
+        if(hat >= 0)
+        {
+            currentHat = Instantiate(DataManager.Instance.hatData.hatDatas[hat].HatPrefabs, hatPoint);
+        }
+        int shield = SaveManager.Instance.ShieldStates.currentItem;
+        if(shield >= 0)
+        {
+            currentShield = Instantiate(DataManager.Instance.shieldData.ShieldDatas[shield].ShieldPrefabs, shieldPoint);
+
+        }
+    }
     public override void UpLevel(int score)
     {
         base.UpLevel(score);

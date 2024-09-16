@@ -12,9 +12,7 @@ public class  Pant
 
 
 [CreateAssetMenu(fileName = "PantData", menuName = "ScriptableObjects/PantData", order = 3)]
-public class PantData : ScriptableObject
+public class PantData : SkinData
 {
     public Pant[] PantDatas;
-    public int Price;
-    public int SpeedBonus;
 } 

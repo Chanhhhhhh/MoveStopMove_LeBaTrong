@@ -15,18 +15,24 @@ public class Bullet : GameUnit
     
     public override void OnInit()
     {
-        TF.forward = (target.position - TF.position + Vector3.up).normalized;
-        StartPos = TF.position;
+        target = null;
+        owner = null;
+        victim = null;
     }
 
     public override void OnDespawn()
     {
-        owner.EndAttack();
+        if(owner != null)
+        {
+            owner.EndAttack();
+
+        }
         SimplePool.Despawn(this);
     }
-    public void SetUp(Character character, Transform target, float Distance, bool IsUlti)
+    public void SetUp(Character character, Transform target, float Distance,float scale, bool IsUlti)
     {
-        TF.localScale = Vector3.one;
+        OnInit();
+        TF.localScale = Vector3.one*scale;
         Speed = Constant.SPEED_BULLET;
         if (IsUlti)
         {
@@ -36,7 +42,8 @@ public class Bullet : GameUnit
         this.owner = character;
         this.target = target;
         this.Distance = Distance;
-        OnInit();
+        TF.forward = (target.position - TF.position + Vector3.up).normalized;
+        StartPos = TF.position;
     }
 
     private void OnTriggerEnter(Collider other)

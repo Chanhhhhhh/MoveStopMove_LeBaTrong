@@ -277,6 +277,7 @@ MonoBehaviour:
   IndicatorOffset: {fileID: 7260039799037926484}
   weaponPoint: {fileID: 452226031884974171}
   MeshBody: {fileID: 9038279707227927026}
+  CharName: 
   DeadScore: 0
   currentHat: {fileID: 0}
   currentPant: {fileID: 0}
@@ -489,7 +490,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4613927048106486598
 Transform:
   m_ObjectHideFlags: 0

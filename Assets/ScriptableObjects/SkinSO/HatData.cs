@@ -12,9 +12,7 @@ public class Hat
 }
 
 [CreateAssetMenu(fileName = "HatData", menuName = "ScriptableObjects/HatData", order = 2)]
-public class HatData : ScriptableObject
+public class HatData : SkinData
 {
     public Hat[] hatDatas;
-    public int Price;
-    public int RangeBonus;
 }
