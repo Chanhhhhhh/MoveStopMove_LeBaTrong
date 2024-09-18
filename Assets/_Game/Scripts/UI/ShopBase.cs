@@ -13,7 +13,8 @@ public class ShopBase : UICanvas
     [SerializeField] protected Button StateBtn;
     [SerializeField] protected Button BuyBtn;
     public virtual void OnExit()
-    {      
+    {
+        PlaySoundClickBtn();
         GameManager.ChangeState(GameState.MainMenu);
     }
 

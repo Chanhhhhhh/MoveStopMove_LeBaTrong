@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class Character : GameUnit
 {
@@ -84,7 +85,7 @@ public abstract class Character : GameUnit
 
     public override void OnDespawn()
     {
-        
+        SoundManager.Instance.PlaySoundClip(SoundType.Dead, this.TF.position);
     }
 
 
@@ -119,6 +120,7 @@ public abstract class Character : GameUnit
         Bullet newBullet = SimplePool.Spawn<Bullet>(weaponType, TF.position + Vector3.up + TF.forward, TF.rotation);
         if(newBullet != null )
         {
+            SoundManager.Instance.PlaySoundClip(SoundType.WeaponThrow, this.TF.position);
             newBullet.SetUp(this, this.Target.TF, ChooseRangeAttack(),currentScale, IsUlti);
         }
     }
@@ -153,7 +155,11 @@ public abstract class Character : GameUnit
     {
         level += score;
         TargetIndicator.SetLevel(level);
-        ScoreRate scoreRate = LevelManager.Instance.GetScoreRate(level);
+        ScoreRate scoreRate = LevelManager.Instance.GetScoreRate(level);      
+        //if(scoreRate.Scale > currentScale) 
+        //{
+        //    SoundManager.Instance.PlaySoundClip(SoundType.SizeUp, this.TF.position);
+        //}
         currentScale = scoreRate.Scale;
         DeadScore = scoreRate.deadScore;
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT*currentScale;

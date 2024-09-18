@@ -13,6 +13,7 @@ public class GamePlay : UICanvas
     
     public void OnSetting()
     {
+        PlaySoundClickBtn();
         GameManager.ChangeState(GameState.Setting);
     }
 

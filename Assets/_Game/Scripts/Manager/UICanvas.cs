@@ -80,4 +80,9 @@ public class UICanvas : MonoBehaviour
         Invoke(nameof(CloseDirectly), delayTime);
     }
 
+    public void PlaySoundClickBtn()
+    {
+        SoundManager.Instance.PlaySoundClip(SoundType.BtnClick);
+    }
+
 }

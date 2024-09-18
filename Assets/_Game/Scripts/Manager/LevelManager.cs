@@ -32,7 +32,7 @@ public class LevelManager : Singleton<LevelManager>
     };
     [SerializeField] private GameObject[] giftBoxes;
     public GameObject giftbox;
-    private float RadiusMap = 60f;
+    private float RadiusMap = 50f;
     private List<Character> enemyList = new List<Character>();
 
 
@@ -76,6 +76,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnHitEnemy(Character owner, Character victim)
     {
+        SoundManager.Instance.PlaySoundClip(SoundType.WeaponHit, victim.TF.position);
         if (enemyList.Contains(victim))
         {
             enemyList.Remove(victim);
@@ -104,7 +105,6 @@ public class LevelManager : Singleton<LevelManager>
 
         if (enemyList.Count < MaxEnemy)
         {
-            int countSpawn = 0;
             Vector3 SpawnPos = GetRandomPoint(player.transform.position, RadiusMap);
             countEnemy++;
             Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, SpawnPos, Quaternion.identity);
@@ -145,8 +145,9 @@ public class LevelManager : Singleton<LevelManager>
     }
 
     public void SetWin()
-    {
+    {       
         GameManager.ChangeState(GameState.Win);
+        SoundManager.Instance.PlaySoundClip(SoundType.Win);
         SimplePool.CollectAll();
         player.OnInit();
         player.ChangeAnim(Constant.WIN_ANIM_STRING);
@@ -157,6 +158,7 @@ public class LevelManager : Singleton<LevelManager>
         if(IsEnd) { return; }
         IsEnd = true;
         GameManager.ChangeState(GameState.Lose);
+        SoundManager.Instance.PlaySoundClip(SoundType.Lose);
         UIManager.Instance.GetUI<LoseUI>().SetResult(GetAlive(), killer.CharName);
         player.OnDespawn();
     }

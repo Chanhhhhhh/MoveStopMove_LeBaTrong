@@ -62,7 +62,7 @@ public class Player : Character
             }
             if (IsWeapon && Target != null && TimeCountdownAttack <= 0)
             {
-                if(Vector3.Distance(Target.TF.position, TF.position) > rangeAttack)
+                if(Vector3.Distance(Target.TF.position, TF.position) > ChooseRangeAttack())
                 {
                     Target = null;
                     return;
@@ -116,6 +116,7 @@ public class Player : Character
     public override void UpLevel(int score)
     {
         base.UpLevel(score);
+        circleAttack.SetRadiusCollider(rangeAttack);
         Camerafollow.Instance.ScaleCamera(currentScale);
     }
 
@@ -123,10 +124,10 @@ public class Player : Character
     {
         if (IsUlti)
         {
-            circleAttack.DrawCircle(UltiRangedAttack);
+            circleAttack.DrawCircle(Constant.RANGE_ATTACK_DEFAULT*1.5f);
             return;
         }
-        circleAttack.DrawCircle(rangeAttack);
+        circleAttack.DrawCircle(Constant.RANGE_ATTACK_DEFAULT);
     }
 
     internal override void BuffUlti()
@@ -137,10 +138,13 @@ public class Player : Character
 
     public override void EndAttack()
     {
-        base.EndAttack();
-        TurnOnCircle();
+        this.IsWeapon = true;
+        weapon.OnChild();
+        if (IsUlti)
+        {             
+            IsUlti = false;
+            TurnOnCircle();
+        }
     }
-
-
 
 }

@@ -6,7 +6,7 @@ public class EnemyDeadState : IState<Enemy>
 {
     private float deadTime;
     public void EnterState(Enemy owner)
-    {
+    {        
         deadTime = Constant.DELAY_TIME_DEAD;
         owner.SetDestination(owner.TF.position);
         owner.ChangeAnim(Constant.DIE_ANIM_STRING);

@@ -883,6 +883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDestroyOnClose: 0
+  BtnContinues: {fileID: 1875146122701176991}
   textRank: {fileID: 4296014436344691195}
   textKiller: {fileID: 7181429658464503148}
 --- !u!1 &6334754692607287925

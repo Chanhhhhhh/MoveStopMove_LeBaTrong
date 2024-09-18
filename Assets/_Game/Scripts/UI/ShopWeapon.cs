@@ -39,6 +39,7 @@ public class ShopWeapon : ShopBase
     }
     public void NextWeapon()
     {
+        PlaySoundClickBtn();
         IndexWeapon++;
         if (IndexWeapon >= AmountWeapon)
         {
@@ -50,6 +51,7 @@ public class ShopWeapon : ShopBase
 
     public void PrevWeapon()
     {
+        PlaySoundClickBtn();
         IndexWeapon--;
         if (IndexWeapon < 0)
         {
@@ -60,7 +62,8 @@ public class ShopWeapon : ShopBase
 
     public void SelectWeapon()
     {
-        if(IndexWeapon == SaveManager.Instance.WeaponStates.currentItem)
+        PlaySoundClickBtn();
+        if (IndexWeapon == SaveManager.Instance.WeaponStates.currentItem)
         {
             return;
         }
@@ -73,6 +76,7 @@ public class ShopWeapon : ShopBase
      
     public void BuyWeapon()
     {
+        PlaySoundClickBtn();
         int price = DataManager.Instance.weapons[IndexWeapon].weaponData.Price;
         if (SaveManager.Instance.Coin < price)
         {

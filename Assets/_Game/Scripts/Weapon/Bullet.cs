@@ -36,7 +36,7 @@ public class Bullet : GameUnit
         Speed = Constant.SPEED_BULLET;
         if (IsUlti)
         {
-            TF.DOScale(Vector3.one * 2, 1f);
+            TF.DOScale(Vector3.one * 2.5f, 1f);
             Speed = Constant.SPEED_BULLET * 2;
         }        
         this.owner = character;
@@ -56,6 +56,7 @@ public class Bullet : GameUnit
 
         if(other.CompareTag(Constant.TAG_ENEMY) && other.gameObject != owner.gameObject)
         {
+            //Debug.Log("Enemy");
             Character character = Cache.GetCharacter(other);
             this.victim = character;
             LevelManager.Instance.OnHitEnemy(this.owner, this.victim);

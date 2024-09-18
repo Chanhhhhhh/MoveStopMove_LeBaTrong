@@ -15,8 +15,12 @@ public class Enemy : Character
     [SerializeField] private NavMeshAgent NavMeshAgent;
 
     private Vector3 Destination;
-    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.03f;
+    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.5f;
 
+    //private void Start()
+    //{
+    //    OnInit();
+    //}
     public override void OnInit()
     {
         CharName = Constant.GetName();
@@ -24,7 +28,7 @@ public class Enemy : Character
         RandomItemSkin();
         base.OnInit();
         UpLevel(LevelManager.Instance.RandomLevel());
-        EnemyStateMachine.ChangeState(EnemyIdleState);
+        EnemyStateMachine.ChangeState(EnemyMoveState);
     }
     public override void OnDespawn()
     {
@@ -35,6 +39,7 @@ public class Enemy : Character
 
     private void Update()
     {
+        //Debug.Log(Vector3.Distance(Destination, TF.position));
         TimeCountdownAttack -= Time.deltaTime;
         EnemyStateMachine.ExecuteState();      
     }

@@ -16,7 +16,7 @@ public class ButtonAction : MonoBehaviour
 
     private void OnClick()
     {
-        
+        SoundManager.Instance.PlaySoundClip(SoundType.BtnClick);
         Action.Invoke(index, this);
     }
 

@@ -87,6 +87,7 @@ public class ShopSkin : ShopBase
     }
     private void OnClickShopBtn(ShopType shopType)
     {
+        PlaySoundClickBtn();
         BtnAction?.Invoke(shopType);
     }
     private void OpenShopView(ShopType shopType)
