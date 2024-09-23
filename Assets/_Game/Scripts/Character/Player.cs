@@ -14,15 +14,23 @@ public class Player : Character
         circleAttack.ClearCircle();
         this.TF.position = Vector3.zero;
         ChangeAnim(Constant.IDLE_ANIM_STRING);
-        counterTime.OnCancel();
-        
+        counterTime.OnCancel();      
     }
     public override void OnDespawn()
     {
         base.OnDespawn();
         ColliderState(false);
+        counterTime.OnCancel();
         ChangeAnim(Constant.DIE_ANIM_STRING);
     }
+
+    public void OnRevive()
+    {
+        IsWeapon = true;
+        Target = null;
+        ColliderState(true);  
+    }
+    
     private void Update()
     {
         TimeCountdownAttack -= Time.deltaTime;
@@ -30,6 +38,7 @@ public class Player : Character
         {
             return;
         }
+        CheckTarget();
         if (Input.GetMouseButtonDown(0))
         {
             CounterTime.OnCancel();
@@ -62,11 +71,6 @@ public class Player : Character
             }
             if (IsWeapon && Target != null && TimeCountdownAttack <= 0)
             {
-                if(Vector3.Distance(Target.TF.position, TF.position) > ChooseRangeAttack())
-                {
-                    Target = null;
-                    return;
-                }
                 ChangeAnim(Constant.IDLE_ANIM_STRING);
                 RotateTarget();
                 Attack();                
@@ -82,15 +86,6 @@ public class Player : Character
         IsWeapon = false;
         CounterTime.OnStart(Throw, Constant.DELAY_TIME_ATTACK);
     }
-
-    public override void GetTargetIndicator()
-    {
-        TargetIndicator = SimplePool.Spawn<TargetIndicator>(PoolType.Indicator);
-        TargetIndicator.Target = IndicatorOffset;
-        TargetIndicator.textName.text = "You";
-        TargetIndicator.OnInit();
-    }
-
     public void GetSaveItem()
     {
         OnInit();

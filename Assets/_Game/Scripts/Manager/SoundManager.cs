@@ -11,6 +11,7 @@ public enum SoundType
     Dead  = 4,
     Lose =5,
     Win = 6,
+    ReviveCount = 7,
 }
 [System.Serializable]
 public class SoundAudioClip
@@ -22,8 +23,12 @@ public class SoundManager : Singleton<SoundManager>
 {
     [SerializeField] private AudioSource m_AudioSource;
     [SerializeField] private SoundAudioClip[] soundAudioClips;
-    public bool IsMute;
+    private bool IsMute;
 
+    public void OnInit()
+    {
+        AudioListener.volume = SaveManager.Instance.OnSound ? 1 : 0;
+    }
     public AudioClip GetAudioClip(SoundType soundType)
     {
         for(int i = 0; i < soundAudioClips.Length; i++)
@@ -49,8 +54,9 @@ public class SoundManager : Singleton<SoundManager>
         m_AudioSource.PlayOneShot(GetAudioClip((soundType)), volume);
     }
     public void MuteHandle()
-    {
+    {      
         IsMute = !IsMute;
+        SaveManager.Instance.OnSound = !IsMute;
         AudioListener.volume = IsMute ? 0 : 1;
     }
 }

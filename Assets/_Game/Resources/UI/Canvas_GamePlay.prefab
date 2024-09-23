@@ -299,7 +299,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsDestroyOnClose: 0
   textAlive: {fileID: 7925162239540507041}
-  TargetIndicatorContent: {fileID: 6711599794670894536}
+  Setting: {fileID: 8965210879774135501}
+  Alive: {fileID: 4890251553767732516}
 --- !u!1 &4466487421521634072
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,8 +332,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4890251553767732516}
-  - {fileID: 8965210879774135501}
   - {fileID: 6711599794670894536}
+  - {fileID: 8965210879774135501}
   m_Father: {fileID: 1861443325026975176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -415,7 +416,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -50, y: -50}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &8416008055471241909
 CanvasRenderer:
@@ -619,4 +620,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsDestroyOnClose: 0
   textAlive: {fileID: 7925162239540507041}
-  TargetIndicatorContent: {fileID: 6711599794670894536}
+  Setting: {fileID: 0}
+  Alive: {fileID: 0}

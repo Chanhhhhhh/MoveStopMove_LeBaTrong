@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum GameState {MainMenu, GamePlay, Setting, Win, Lose, ShopWeapon, ShopSkin }
+public enum GameState {MainMenu, GamePlay, Setting, Win, Lose, ShopWeapon, ShopSkin, PopUpRevive }
 public class GameManager : Singleton<GameManager>
 {
     private static GameState gameState;
@@ -11,8 +11,9 @@ public class GameManager : Singleton<GameManager>
         Application.targetFrameRate= 60;
         SaveManager.Instance.LoadData();
         DataManager.Instance.OnInit();
-        ChangeState(GameState.MainMenu);
+        SoundManager.Instance.OnInit();
         LevelManager.Instance.player.GetSaveItem();
+        ChangeState(GameState.MainMenu);
     }
     public static void ChangeState(GameState state)
     {
@@ -30,19 +31,21 @@ public class GameManager : Singleton<GameManager>
             case GameState.ShopSkin:
                 UIManager.Instance.OpenUI<ShopSkin>();
                 break;
-            case GameState.GamePlay:
-                UIManager.Instance.CloseUI<CoinUI>();
-                UIManager.Instance.OpenUI<GamePlay>();
+            case GameState.GamePlay:   
+                UIManager.Instance.OpenUI<GamePlay>(1f);
                 break;
             case GameState.Setting:
                 UIManager.Instance.OpenUI<SettingUI>();
+                break;
+            case GameState.PopUpRevive:
+                UIManager.Instance.CloseAll();
+                UIManager.Instance.OpenUI<ReviveUI>();
                 break;
             case GameState.Win:
                 UIManager.Instance.CloseAll();
                 UIManager.Instance.OpenUI<WinUI>();
                 break;
             case GameState.Lose:
-                UIManager.Instance.CloseAll();
                 UIManager.Instance.OpenUI<LoseUI>();
                 break;
             default:

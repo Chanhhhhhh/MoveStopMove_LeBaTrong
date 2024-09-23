@@ -51,6 +51,16 @@ public class UIManager : Singleton<UIManager>
         return canvas as T;
     }
 
+    public T OpenUI<T>(float delayTime) where T : UICanvas
+    {
+        UICanvas canvas = GetUI<T>();
+
+        canvas.Setup();
+        canvas.OpenDelay(delayTime);
+
+        return canvas as T;
+    }
+
     //close UI directly
     //dong UI canvas ngay lap tuc
     public void CloseUI<T>() where T : UICanvas

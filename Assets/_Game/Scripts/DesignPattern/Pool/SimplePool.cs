@@ -78,7 +78,6 @@ public static class SimplePool
         public GameUnit Spawn(Vector3 pos, Quaternion rot)
         {
             GameUnit obj = Spawn();
-
             obj.TF.SetPositionAndRotation( pos, rot);
 
             return obj;

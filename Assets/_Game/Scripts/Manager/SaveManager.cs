@@ -32,6 +32,38 @@ public class SaveManager : Singleton<SaveManager>
     public SaveItemBase ShieldStates { get { return shieldStates; } }
     #endregion
 
+    private bool onSound;
+    public bool OnSound
+    {
+        get { return onSound; }
+        set
+        {
+            onSound = value;
+            SaveData();
+        }
+    }
+
+    private bool onVibration;
+    public bool OnVibration
+    {
+        get { return onVibration; }
+        set
+        {
+            onVibration = value;
+            SaveData();
+        }
+    }
+
+    private string namePlayer;
+    public string NamePlayer
+    {
+        get { return namePlayer; }
+        set
+        {
+            namePlayer = value;
+            SaveData();
+        }
+    }
     public void SaveData()
     {
         GameData saveData = new GameData
@@ -41,6 +73,10 @@ public class SaveManager : Singleton<SaveManager>
             HatState = this.hatStates,
             PantState = this.pantStates,
             ShieldState = this.shieldStates,
+            OnSound = this.onSound,
+            OnVibration = this.onVibration,
+            NamePlayer = this.namePlayer,
+
         };
         string path = Application.persistentDataPath + PATH;
         string json = JsonUtility.ToJson(saveData, true);
@@ -52,11 +88,14 @@ public class SaveManager : Singleton<SaveManager>
         string path = Application.persistentDataPath + PATH;
         GameData defaultData = new GameData
         {
-            coin = 10000, 
-            WeaponState = new SaveItemBase { currentItem = 0, ItemStates = CreateListDefault(DataManager.Instance.weapons.Count)},
-            HatState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.hatData.hatDatas.Length)},
-            PantState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.pantData.PantDatas.Length)},
-            ShieldState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.shieldData.ShieldDatas.Length)},            
+            coin = 10000,
+            WeaponState = new SaveItemBase { currentItem = 0, ItemStates = CreateListDefault(DataManager.Instance.weapons.Count) },
+            HatState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.hatData.hatDatas.Length) },
+            PantState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.pantData.PantDatas.Length) },
+            ShieldState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.shieldData.ShieldDatas.Length) },
+            OnSound = true,
+            OnVibration = true,
+            NamePlayer = "You",
         };
         defaultData.WeaponState.ItemStates[0] = 0;
         if (!File.Exists(path))
@@ -79,6 +118,9 @@ public class SaveManager : Singleton<SaveManager>
         this.hatStates = data.HatState;
         this.pantStates = data.PantState;
         this.shieldStates = data.ShieldState;
+        this.onSound = data.OnSound;
+        this.onVibration = data.OnVibration;
+        this.namePlayer = data.NamePlayer;
     }
     public List<int> CreateListDefault(int count)
     {
@@ -130,7 +172,9 @@ public class GameData
     public SaveItemBase HatState;
     public SaveItemBase PantState;
     public SaveItemBase ShieldState;
-    
+    public bool OnSound;
+    public bool OnVibration;
+    public string NamePlayer;
 }
 
 

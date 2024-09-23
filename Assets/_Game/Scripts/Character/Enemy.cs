@@ -17,18 +17,15 @@ public class Enemy : Character
     private Vector3 Destination;
     public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.5f;
 
-    //private void Start()
-    //{
-    //    OnInit();
-    //}
     public override void OnInit()
     {
+        SetActiveFocus(false);
         CharName = Constant.GetName();
         GetTargetIndicator();
         RandomItemSkin();
         base.OnInit();
         UpLevel(LevelManager.Instance.RandomLevel());
-        EnemyStateMachine.ChangeState(EnemyMoveState);
+        EnemyStateMachine.ChangeState(EnemyIdleState);
     }
     public override void OnDespawn()
     {
@@ -54,19 +51,6 @@ public class Enemy : Character
     public override void Attack()
     {
         ChangeAnim(IsUlti ? Constant.ULTI_ANIM_STRING : Constant.ATTACK_ANIM_STRING);
-    }
-
-    public override void GetTargetIndicator()
-    {
-        TargetIndicator = SimplePool.Spawn<TargetIndicator>(PoolType.Indicator);
-        TargetIndicator.Target = IndicatorOffset;
-        TargetIndicator.textName.text = CharName;
-        TargetIndicator.OnInit();
-    }
-
-    public void SetActiveFocus(bool IsFocus)
-    {
-
     }
 
     public void RandomItemSkin()

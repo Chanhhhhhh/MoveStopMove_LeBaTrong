@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class Character : GameUnit
 {
@@ -12,13 +11,13 @@ public abstract class Character : GameUnit
     [SerializeField] protected Transform weaponPoint;
 
     [SerializeField] protected Renderer MeshBody;
+    [SerializeField] protected GameObject FocusImg;
 
-    
     protected float Speed;
     protected bool IsWeapon;
     protected bool IsUlti;
     protected TargetIndicator TargetIndicator;
-    protected float currentScale;
+    protected float currentScale = 1;
     protected Weapon weapon;
     protected PoolType weaponType;
     protected float rangeAttack;
@@ -53,7 +52,13 @@ public abstract class Character : GameUnit
     }
 
     public abstract void Attack();
-    public abstract void GetTargetIndicator();
+    public void GetTargetIndicator()
+    {
+        TargetIndicator = SimplePool.Spawn<TargetIndicator>(PoolType.Indicator);
+        TargetIndicator.Target = IndicatorOffset;
+        TargetIndicator.textName.text = CharName;
+        TargetIndicator.OnInit();
+    }
     public void ChangeWeapon(PoolType weaponType)
     {
         foreach(Transform child in weaponPoint)
@@ -113,6 +118,10 @@ public abstract class Character : GameUnit
     {
         this.col.enabled = state;
     }
+    public void SetActiveFocus(bool IsFocus)
+    {
+        FocusImg.SetActive(IsFocus);
+    }
     public void Throw()
     {
         TimeCountdownAttack = Constant.TIME_COOLDOWN;
@@ -133,11 +142,28 @@ public abstract class Character : GameUnit
         colliders = colliders.OrderBy(x => Vector3.Distance(x.transform.position, TF.position)).ToArray();
         if(colliders.Length > 1 )
         {
-            this.Target = Cache.GetCharacter(colliders[1]);
+            Character newTarget = Cache.GetCharacter(colliders[1]);
+            if (this is Player)
+            {              
+                if(newTarget != null && newTarget !=  this.Target) 
+                {
+                    Target?.SetActiveFocus(false);
+                    this.Target = newTarget;
+                    this.Target.SetActiveFocus(true);
+                }
+            }
+            else
+            {
+                this.Target = newTarget;
+            }          
         }
         else
         {
-            this.Target = null;
+            if(this is Player)
+            {
+                Target?.SetActiveFocus(false);
+            }
+            this.Target = null;         
         }
         return colliders.Length > 1;
     }
@@ -155,11 +181,11 @@ public abstract class Character : GameUnit
     {
         level += score;
         TargetIndicator.SetLevel(level);
-        ScoreRate scoreRate = LevelManager.Instance.GetScoreRate(level);      
-        //if(scoreRate.Scale > currentScale) 
-        //{
-        //    SoundManager.Instance.PlaySoundClip(SoundType.SizeUp, this.TF.position);
-        //}
+        ScoreRate scoreRate = LevelManager.Instance.GetScoreRate(level);
+        if (this is Player && scoreRate.Scale > currentScale)
+        {
+            SoundManager.Instance.PlaySoundClip(SoundType.SizeUp);
+        }
         currentScale = scoreRate.Scale;
         DeadScore = scoreRate.deadScore;
         rangeAttack = Constant.RANGE_ATTACK_DEFAULT*currentScale;

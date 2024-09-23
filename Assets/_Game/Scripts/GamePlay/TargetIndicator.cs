@@ -56,7 +56,7 @@ public class TargetIndicator : GameUnit
     }
     public override void OnInit()
     {
-        this.transform.SetParent(UIManager.Instance.GetUI<GamePlay>().TargetIndicatorContent);
+        this.transform.SetParent(LevelManager.Instance.TargetIndicatorContent);
         Color color = new Color(Random.value, Random.value, Random.value,1);
         Icon.color = color;
         textName.color = color;

@@ -31,11 +31,14 @@ public class LevelManager : Singleton<LevelManager>
         new ScoreRate(22, 2.2f,7),
     };
     [SerializeField] private GameObject[] giftBoxes;
-    public GameObject giftbox;
+    private GameObject giftbox;
     private float RadiusMap = 50f;
     private List<Character> enemyList = new List<Character>();
+    private int CoinBonus;
+    private Character Killer;
 
-
+    public int PriceRevive = 200;
+    public Transform TargetIndicatorContent;
     public Player player;
     public int AmountEnemy = 10;
     public int MaxEnemy = 4;
@@ -46,18 +49,20 @@ public class LevelManager : Singleton<LevelManager>
     {
         IsEnd = false;
         countEnemy = 0;
-
-        // player
-        player.OnInit();
-        player.GetTargetIndicator();
-        player.UpLevel(0);
-        player.TurnOnCircle();
+        CoinBonus = 0;
+        Killer = null;
 
         // enemy
         for (int i = 0;i < MaxEnemy;i++)
         {
             SpawnEnemy();
         }
+
+        // player
+        player.OnInit();
+        player.GetTargetIndicator();
+        player.UpLevel(0);
+        player.TurnOnCircle();
 
         SetAliveUI();
         SpawnGiftBox();
@@ -76,6 +81,11 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnHitEnemy(Character owner, Character victim)
     {
+        if (owner.CompareTag(Constant.TAG_PLAYER))
+        {
+            CoinBonus++;
+            Vibration.Vibrate(200);
+        }
         SoundManager.Instance.PlaySoundClip(SoundType.WeaponHit, victim.TF.position);
         if (enemyList.Contains(victim))
         {
@@ -108,8 +118,9 @@ public class LevelManager : Singleton<LevelManager>
             Vector3 SpawnPos = GetRandomPoint(player.transform.position, RadiusMap);
             countEnemy++;
             Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, SpawnPos, Quaternion.identity);
-            enemyList.Add(newEnemy); 
-            newEnemy.OnInit();        
+            enemyList.Add(newEnemy);
+            Physics.SyncTransforms();
+            newEnemy.OnInit();
         }
         SetAliveUI();
     }
@@ -133,7 +144,7 @@ public class LevelManager : Singleton<LevelManager>
 
     internal void ClearLevel()
     {
-        
+        SaveManager.Instance.Coin += CoinBonus;
         if(giftbox != null)
         {
             giftbox.SetActive(false);
@@ -145,22 +156,31 @@ public class LevelManager : Singleton<LevelManager>
     }
 
     public void SetWin()
-    {       
-        GameManager.ChangeState(GameState.Win);
+    {
         SoundManager.Instance.PlaySoundClip(SoundType.Win);
+        GameManager.ChangeState(GameState.Win);
+        UIManager.Instance.GetUI<WinUI>().SetTextCoinBonus(CoinBonus);
         SimplePool.CollectAll();
         player.OnInit();
         player.ChangeAnim(Constant.WIN_ANIM_STRING);
     }
 
-    public void SetLose(Character killer)
+
+    public void OnHitPlayer(Character Killer)
     {
-        if(IsEnd) { return; }
+        if (IsEnd) { return; }
         IsEnd = true;
-        GameManager.ChangeState(GameState.Lose);
-        SoundManager.Instance.PlaySoundClip(SoundType.Lose);
-        UIManager.Instance.GetUI<LoseUI>().SetResult(GetAlive(), killer.CharName);
+        this.Killer = Killer;
+        GameManager.ChangeState(GameState.PopUpRevive);
         player.OnDespawn();
+    }
+    public void SetLose()
+    {        
+        SoundManager.Instance.PlaySoundClip(SoundType.Lose);
+        GameManager.ChangeState(GameState.Lose);
+        UIManager.Instance.GetUI<LoseUI>().SetResult(GetAlive(), Killer.CharName);
+        UIManager.Instance.GetUI<LoseUI>().SetTextCoinBonus(CoinBonus);
+        
     }
     internal int RandomLevel()
     {
@@ -192,5 +212,18 @@ public class LevelManager : Singleton<LevelManager>
     {
         yield return new WaitForSeconds(5f);
         SpawnGiftBox();
+    }
+
+    public void SetNamePlayer(string name)
+    {
+        SaveManager.Instance.NamePlayer = name;
+        player.CharName = name;
+    }
+
+    internal void Revive()
+    {
+        IsEnd = false;
+        GameManager.ChangeState(GameState.GamePlay);
+        player.OnRevive();
     }
 }

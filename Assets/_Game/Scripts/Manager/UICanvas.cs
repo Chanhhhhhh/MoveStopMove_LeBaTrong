@@ -60,6 +60,11 @@ public class UICanvas : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+
+    public virtual void OpenDelay(float delayTime)
+    {
+        Invoke(nameof(Open), delayTime);
+    }
     //close canvas directly
     //dong truc tiep, ngay lap tuc 
     public virtual void CloseDirectly()

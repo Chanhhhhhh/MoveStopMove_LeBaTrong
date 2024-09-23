@@ -7,27 +7,29 @@ public class ToggleSetting
 {
     public GameObject OnUI;
     public GameObject OffUI;
-    public void ToggleHandle(bool IsOff)
+    public void ToggleHandle(bool IsOn)
     {
-        if (IsOff)
-        {
-            OnUI.SetActive(false);
-            OffUI.SetActive(true);
-        }
-        else
+        if (IsOn)
         {
             OnUI.SetActive(true);
             OffUI.SetActive(false);
         }
+        else
+        {
+            OnUI.SetActive(false);
+            OffUI.SetActive(true);
+        }
     }
 }
-public class SettingUI : UICanvas
+public class SettingUI : UICanvas 
 {
     [SerializeField] private ToggleSetting SoundSetting;
     [SerializeField] private ToggleSetting VibrationSetting;
     public override void Setup()
     {
         base.Setup();
+        SoundSetting.ToggleHandle(SaveManager.Instance.OnSound);
+        VibrationSetting.ToggleHandle(SaveManager.Instance.OnVibration);
     }
     public void ToHome()
     {
@@ -48,12 +50,15 @@ public class SettingUI : UICanvas
     {
         PlaySoundClickBtn();
         SoundManager.Instance.MuteHandle();
-        SoundSetting.ToggleHandle(SoundManager.Instance.IsMute);
+        SoundSetting.ToggleHandle(SaveManager.Instance.OnSound);
     }
 
 
     public void VibrationHandle()
     {
-
+        PlaySoundClickBtn();
+        bool IsVibration = SaveManager.Instance.OnVibration;
+        SaveManager.Instance.OnVibration = !IsVibration;
+        VibrationSetting.ToggleHandle(SaveManager.Instance.OnVibration);
     }
 }

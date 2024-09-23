@@ -17,7 +17,7 @@ public class Constant
     public const float DELAY_TIME_DEAD = 1f;
     public const float TIME_COOLDOWN = 1f;
     public const float SPEED_DEFAULT = 8f;
-    public const float RANGE_ATTACK_DEFAULT = 6f;
+    public const float RANGE_ATTACK_DEFAULT = 5f;
     public const float SPEED_BULLET = 10f;
 
     public const string TAG_PLAYER = "Player";

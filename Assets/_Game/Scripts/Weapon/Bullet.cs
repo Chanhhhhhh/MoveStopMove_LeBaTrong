@@ -50,13 +50,13 @@ public class Bullet : GameUnit
     {
         if (other.CompareTag(Constant.TAG_PLAYER) && other.gameObject != owner.gameObject)
         {
-            LevelManager.Instance.SetLose(this.owner);
+            Vibration.Vibrate(200);
+            LevelManager.Instance.OnHitPlayer(this.owner);
             OnDespawn();
         }
 
         if(other.CompareTag(Constant.TAG_ENEMY) && other.gameObject != owner.gameObject)
-        {
-            //Debug.Log("Enemy");
+        {           
             Character character = Cache.GetCharacter(other);
             this.victim = character;
             LevelManager.Instance.OnHitEnemy(this.owner, this.victim);
