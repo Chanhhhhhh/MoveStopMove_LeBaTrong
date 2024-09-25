@@ -14,7 +14,7 @@ public class LoseUI : ResultBaseUI
     {
         PlaySoundClickBtn();
         LevelManager.Instance.ClearLevel();
-        GameManager.ChangeState(GameState.MainMenu);       
+        GameManager.Instance.OpenMainMenu();    
     }
 
 

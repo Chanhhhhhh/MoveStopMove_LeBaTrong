@@ -1365,6 +1365,7 @@ MonoBehaviour:
     OnUI: {fileID: 189169576940987270}
     OffUI: {fileID: 6693578878081871656}
   NamePlayer: {fileID: 509801565104211030}
+  BestZoneScore: {fileID: 5680136849677190067}
   ContentLeft: {fileID: 7063777096862077171}
   ContentRight: {fileID: 5286698127016851341}
   OpenDelayTime: 0.3

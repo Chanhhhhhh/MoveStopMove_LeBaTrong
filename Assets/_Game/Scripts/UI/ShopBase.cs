@@ -15,7 +15,7 @@ public class ShopBase : UICanvas
     public virtual void OnExit()
     {
         PlaySoundClickBtn();
-        GameManager.ChangeState(GameState.MainMenu);
+        GameManager.Instance.OpenMainMenu();
     }
 
     public virtual void SetStateItem(int state, int price)

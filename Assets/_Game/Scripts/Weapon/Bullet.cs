@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Bullet : GameUnit
 {
-    private Transform target;
+    private Vector3 target;
     private Character owner;
     private Character victim;
 
@@ -15,7 +15,6 @@ public class Bullet : GameUnit
     
     public override void OnInit()
     {
-        target = null;
         owner = null;
         victim = null;
     }
@@ -29,7 +28,7 @@ public class Bullet : GameUnit
         }
         SimplePool.Despawn(this);
     }
-    public void SetUp(Character character, Transform target, float Distance,float scale, bool IsUlti)
+    public void SetUp(Character character, Vector3 target, float Distance,float scale, bool IsUlti)
     {
         OnInit();
         TF.localScale = Vector3.one*scale;
@@ -42,7 +41,7 @@ public class Bullet : GameUnit
         this.owner = character;
         this.target = target;
         this.Distance = Distance;
-        TF.forward = (target.position - TF.position + Vector3.up).normalized;
+        TF.forward = (target - TF.position + Vector3.up).normalized;
         StartPos = TF.position;
     }
 

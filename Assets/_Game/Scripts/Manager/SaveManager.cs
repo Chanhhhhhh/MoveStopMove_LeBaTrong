@@ -64,6 +64,28 @@ public class SaveManager : Singleton<SaveManager>
             SaveData();
         }
     }
+
+    private int zone;
+    public int Zone
+    {
+        get { return zone;}
+        set
+        {
+            zone = value;
+            SaveData();
+        }
+    }
+
+    private int bestRank;
+    public int BestRank
+    {
+        get { return bestRank; }
+        set
+        {
+            bestRank = value;
+            SaveData();
+        }
+    }
     public void SaveData()
     {
         GameData saveData = new GameData
@@ -76,7 +98,8 @@ public class SaveManager : Singleton<SaveManager>
             OnSound = this.onSound,
             OnVibration = this.onVibration,
             NamePlayer = this.namePlayer,
-
+            Zone = this.zone,
+            BestRank = this.bestRank,
         };
         string path = Application.persistentDataPath + PATH;
         string json = JsonUtility.ToJson(saveData, true);
@@ -95,7 +118,9 @@ public class SaveManager : Singleton<SaveManager>
             ShieldState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.shieldData.ShieldDatas.Length) },
             OnSound = true,
             OnVibration = true,
-            NamePlayer = "You",
+            NamePlayer = "You", 
+            Zone = 0,
+            BestRank = 1000,
         };
         defaultData.WeaponState.ItemStates[0] = 0;
         if (!File.Exists(path))
@@ -121,6 +146,8 @@ public class SaveManager : Singleton<SaveManager>
         this.onSound = data.OnSound;
         this.onVibration = data.OnVibration;
         this.namePlayer = data.NamePlayer;
+        this.zone = data.Zone;
+        this.bestRank = data.BestRank;
     }
     public List<int> CreateListDefault(int count)
     {
@@ -175,6 +202,8 @@ public class GameData
     public bool OnSound;
     public bool OnVibration;
     public string NamePlayer;
+    public int Zone;
+    public int BestRank;
 }
 
 

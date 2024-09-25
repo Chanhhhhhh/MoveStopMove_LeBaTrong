@@ -27,6 +27,7 @@ public abstract class Character : GameUnit
     protected float TimeCountdownAttack;
     private string currentAnim;
     public Character Target;
+    private Vector3 TargetTF;
 
     public string CharName;
     public int DeadScore;
@@ -126,11 +127,12 @@ public abstract class Character : GameUnit
     {
         TimeCountdownAttack = Constant.TIME_COOLDOWN;
         weapon.OffChild();
+        TargetTF = Target.TF.position;
         Bullet newBullet = SimplePool.Spawn<Bullet>(weaponType, TF.position + Vector3.up + TF.forward, TF.rotation);
         if(newBullet != null )
         {
             SoundManager.Instance.PlaySoundClip(SoundType.WeaponThrow, this.TF.position);
-            newBullet.SetUp(this, this.Target.TF, ChooseRangeAttack(),currentScale, IsUlti);
+            newBullet.SetUp(this, this.TargetTF, ChooseRangeAttack(),currentScale, IsUlti);
         }
     }
 
@@ -169,6 +171,7 @@ public abstract class Character : GameUnit
     }
     public void RotateTarget()
     {
+        
         Vector3 targetPos = Target.TF.position;
         Vector3 targetAngle = targetPos - TF.position;
         float targetAngleY = Mathf.Atan2(targetAngle.x, targetAngle.z) * Mathf.Rad2Deg;

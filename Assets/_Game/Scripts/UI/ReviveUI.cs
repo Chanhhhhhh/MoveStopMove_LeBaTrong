@@ -55,8 +55,7 @@ public class ReviveUI : UICanvas
         this.CloseDirectly();
     }
     public void OnRevive()
-    {        
-        SaveManager.Instance.Coin -= LevelManager.Instance.PriceRevive;
+    {          
         LevelManager.Instance.Revive();
         this.CloseDirectly();
     }

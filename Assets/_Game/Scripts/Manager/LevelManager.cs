@@ -31,29 +31,48 @@ public class LevelManager : Singleton<LevelManager>
         new ScoreRate(22, 2.2f,7),
     };
     [SerializeField] private GameObject[] giftBoxes;
+    [SerializeField] private Zone[] zones;
+    private Zone currentZone;
     private GameObject giftbox;
     private float RadiusMap = 50f;
     private List<Character> enemyList = new List<Character>();
     private int CoinBonus;
     private Character Killer;
+    private bool IsEnd;
+    private bool isRevived;
+    private int AmountEnemy;
+    private int MaxEnemy;
+    private int countEnemy;
 
     public int PriceRevive = 200;
+    public int BestRank;
     public Transform TargetIndicatorContent;
     public Player player;
-    public int AmountEnemy = 10;
-    public int MaxEnemy = 4;
-    public int countEnemy;
 
-    private bool IsEnd;
+
+    
+    public void CreateZone(int zoneIndex)
+    {
+        if(currentZone != null)
+        {
+            Destroy(currentZone.gameObject);
+        }
+        currentZone = Instantiate(zones[zoneIndex], Vector3.zero, Quaternion.identity).GetComponent<Zone>();
+        currentZone.OnInit();
+        AmountEnemy = currentZone.AmountEnemies;
+        MaxEnemy = currentZone.MaxEnemies;
+        RadiusMap = currentZone.MapRadius;
+    }
     public void OnInit()
     {
         IsEnd = false;
+        isRevived = false;
         countEnemy = 0;
         CoinBonus = 0;
         Killer = null;
 
-        // enemy
-        for (int i = 0;i < MaxEnemy;i++)
+        //// enemy
+        for (int i = 0; i < MaxEnemy; i++)
         {
             SpawnEnemy();
         }
@@ -67,6 +86,7 @@ public class LevelManager : Singleton<LevelManager>
         SetAliveUI();
         SpawnGiftBox();
     }
+
     public Vector3 GetRandomPoint(Vector3 center, float radius)
     {
         Vector3 randomPoint = center + Random.insideUnitSphere * radius;
@@ -115,9 +135,23 @@ public class LevelManager : Singleton<LevelManager>
 
         if (enemyList.Count < MaxEnemy)
         {
-            Vector3 SpawnPos = GetRandomPoint(player.transform.position, RadiusMap);
+            int CountLoop = 0;
+            Vector3 SpawnPos;
+            Vector3 FarthestPos = player.TF.position;
+            float MaxDistance = Vector3.Distance(player.TF.position, FarthestPos);
+            do
+            {
+                CountLoop++;
+                SpawnPos = GetRandomPoint(Vector3.zero, RadiusMap);
+                float Distance = Vector3.Distance(player.TF.position, SpawnPos);
+                if (Distance > MaxDistance)
+                {
+                    FarthestPos = SpawnPos;
+                    MaxDistance = Distance;
+                }
+            } while (MaxDistance < 10f && CountLoop < 300);
             countEnemy++;
-            Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, SpawnPos, Quaternion.identity);
+            Enemy newEnemy = SimplePool.Spawn<Enemy>(PoolType.Enemy, FarthestPos, Quaternion.identity);
             enemyList.Add(newEnemy);
             Physics.SyncTransforms();
             newEnemy.OnInit();
@@ -159,6 +193,12 @@ public class LevelManager : Singleton<LevelManager>
     {
         SoundManager.Instance.PlaySoundClip(SoundType.Win);
         GameManager.ChangeState(GameState.Win);
+        if(zones.Length - 1 > SaveManager.Instance.Zone)
+        {
+            SaveManager.Instance.Zone++;
+        }
+        UIManager.Instance.CloseAll();
+        UIManager.Instance.OpenUI<WinUI>();
         UIManager.Instance.GetUI<WinUI>().SetTextCoinBonus(CoinBonus);
         SimplePool.CollectAll();
         player.OnInit();
@@ -168,27 +208,40 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnHitPlayer(Character Killer)
     {
-        if (IsEnd) { return; }
         IsEnd = true;
         this.Killer = Killer;
-        GameManager.ChangeState(GameState.PopUpRevive);
         player.OnDespawn();
+        if (isRevived)
+        {
+            SetLose();
+            return;
+        }
+        GameManager.ChangeState(GameState.PopUpRevive);
+        UIManager.Instance.CloseAll();
+        UIManager.Instance.OpenUI<ReviveUI>();
     }
     public void SetLose()
     {        
         SoundManager.Instance.PlaySoundClip(SoundType.Lose);
         GameManager.ChangeState(GameState.Lose);
-        UIManager.Instance.GetUI<LoseUI>().SetResult(GetAlive(), Killer.CharName);
+        UIManager.Instance.CloseAll();
+        UIManager.Instance.OpenUI<LoseUI>();
+        int rank = GetAlive();
+        if(rank < BestRank)
+        {
+            BestRank = rank;
+        }
+        UIManager.Instance.GetUI<LoseUI>().SetResult(BestRank, Killer.CharName);
         UIManager.Instance.GetUI<LoseUI>().SetTextCoinBonus(CoinBonus);
         
     }
     internal int RandomLevel()
     {
-        if(player.Level <= 2)
+        if(player.Level < 5)
         { 
             return Random.Range(0, 3);
         }
-        return Random.Range(player.Level - 2, player.Level + 2);
+        return Random.Range(player.Level - 5, player.Level + 2);
     }
 
     public void SetAliveUI()
@@ -223,7 +276,9 @@ public class LevelManager : Singleton<LevelManager>
     internal void Revive()
     {
         IsEnd = false;
-        GameManager.ChangeState(GameState.GamePlay);
-        player.OnRevive();
+        isRevived = true;
+        SaveManager.Instance.Coin -= PriceRevive;
+        GameManager.Instance.ChangeStateGamePlay();
+        player.OnRevive(GetRandomPoint(Vector3.zero, RadiusMap));
     }
 }

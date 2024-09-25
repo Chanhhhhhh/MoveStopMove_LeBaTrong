@@ -7,6 +7,7 @@ public class MainMenu : UICanvas
     [SerializeField] private ToggleSetting SoundMainMenu;
     [SerializeField] private ToggleSetting VibrationMainMenu;
     [SerializeField] private TMP_InputField NamePlayer;
+    [SerializeField] private TextMeshProUGUI BestZoneScore;
 
     [SerializeField] private RectTransform ContentLeft;
     [SerializeField] private RectTransform ContentRight;
@@ -26,12 +27,13 @@ public class MainMenu : UICanvas
         NamePlayer.text = SaveManager.Instance.NamePlayer;
         SoundMainMenu.ToggleHandle(SaveManager.Instance.OnSound);
         VibrationMainMenu.ToggleHandle(SaveManager.Instance.OnVibration);
+        BestZoneScore.text = "ZONE:" + (SaveManager.Instance.Zone + 1).ToString() + "  -  BEST:" + LevelManager.Instance.BestRank.ToString();
     }
     public void OnPlay()
     {
         PlaySoundClickBtn();
         UIManager.Instance.CloseUI<CoinUI>();
-        GameManager.ChangeState(GameState.GamePlay);
+        GameManager.Instance.ChangeStateGamePlay();
         LevelManager.Instance.OnInit();
         this.CloseDirectly();
     }
@@ -40,6 +42,7 @@ public class MainMenu : UICanvas
     {
         PlaySoundClickBtn(); 
         GameManager.ChangeState(GameState.ShopWeapon);
+        UIManager.Instance.OpenUI<ShopWeapon>();
         this.CloseDirectly();
     }
 
@@ -47,6 +50,7 @@ public class MainMenu : UICanvas
     {
         PlaySoundClickBtn();
         GameManager.ChangeState(GameState.ShopSkin);
+        UIManager.Instance.OpenUI<ShopSkin>();
         this.CloseDirectly();
     }
 

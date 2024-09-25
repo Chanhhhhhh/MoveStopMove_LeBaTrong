@@ -35,14 +35,14 @@ public class SettingUI : UICanvas
     {
         PlaySoundClickBtn();
         LevelManager.Instance.ClearLevel();
-        GameManager.ChangeState(GameState.MainMenu);
+        GameManager.Instance.OpenMainMenu();
         this.CloseDirectly();
     }
 
     public void ToContinues()
     {
         PlaySoundClickBtn();
-        GameManager.ChangeState(GameState.GamePlay);
+        GameManager.Instance.ChangeStateGamePlay();
         this.CloseDirectly();
     }
 

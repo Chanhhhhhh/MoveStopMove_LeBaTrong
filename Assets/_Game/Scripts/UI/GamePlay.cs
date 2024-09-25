@@ -24,6 +24,7 @@ public class GamePlay : UICanvas
     {
         PlaySoundClickBtn();
         GameManager.ChangeState(GameState.Setting);
+        UIManager.Instance.OpenUI<SettingUI>();
         CloseDirectly();
         
     }

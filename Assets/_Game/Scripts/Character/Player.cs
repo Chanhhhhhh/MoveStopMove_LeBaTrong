@@ -24,11 +24,12 @@ public class Player : Character
         ChangeAnim(Constant.DIE_ANIM_STRING);
     }
 
-    public void OnRevive()
-    {
-        IsWeapon = true;
+    public void OnRevive(Vector3 newPos)
+    {       
+        this.TF.position = newPos;
         Target = null;
-        ColliderState(true);  
+        ChangeAnim(Constant.IDLE_ANIM_STRING);
+        ColliderState(true);
     }
     
     private void Update()
