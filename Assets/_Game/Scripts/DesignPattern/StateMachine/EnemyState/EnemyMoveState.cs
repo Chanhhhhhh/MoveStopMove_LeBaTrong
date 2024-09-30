@@ -6,9 +6,8 @@ public class EnemyMoveState : IState<Enemy>
 {
     public void EnterState(Enemy owner)
     {
-        //Debug.Log("Move");
         owner.ChangeAnim(Constant.RUN_ANIM_STRING);
-        owner.SetDestination(LevelManager.Instance.GetRandomPoint(owner.TF.position, 10f));
+        owner.SetDestination(LevelManager.Instance.GetRandomPoint(owner.TF.position, 10f*(SaveManager.Instance.Zone+1)));
     }
 
     public void Execute(Enemy owner)

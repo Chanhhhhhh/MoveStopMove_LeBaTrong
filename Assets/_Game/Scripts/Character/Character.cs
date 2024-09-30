@@ -7,11 +7,13 @@ public abstract class Character : GameUnit
     [SerializeField] private Animator animator;
     [SerializeField] private LayerMask CharacterLayer;
     [SerializeField] private Collider col;
+
     [SerializeField] protected Transform IndicatorOffset;
     [SerializeField] protected Transform weaponPoint;
-
     [SerializeField] protected Renderer MeshBody;
     [SerializeField] protected GameObject FocusImg;
+
+    private string currentAnim;
 
     protected float Speed;
     protected bool IsWeapon;
@@ -25,9 +27,8 @@ public abstract class Character : GameUnit
     protected int level;
     public int Level => level;
     protected float TimeCountdownAttack;
-    private string currentAnim;
-    public Character Target;
-    private Vector3 TargetTF;
+    protected Character Target;
+    protected Vector3 TargetTF;
 
     public string CharName;
     public int DeadScore;
@@ -127,7 +128,6 @@ public abstract class Character : GameUnit
     {
         TimeCountdownAttack = Constant.TIME_COOLDOWN;
         weapon.OffChild();
-        TargetTF = Target.TF.position;
         Bullet newBullet = SimplePool.Spawn<Bullet>(weaponType, TF.position + Vector3.up + TF.forward, TF.rotation);
         if(newBullet != null )
         {
@@ -149,6 +149,7 @@ public abstract class Character : GameUnit
             {              
                 if(newTarget != null && newTarget !=  this.Target) 
                 {
+                    //Debug.Log(newTarget.CharName);
                     Target?.SetActiveFocus(false);
                     this.Target = newTarget;
                     this.Target.SetActiveFocus(true);

@@ -7,7 +7,6 @@ public class EnemyIdleState : IState<Enemy>
     private float IdleTime;
     public void EnterState(Enemy owner)
     {
-        //Debug.Log("idle");
         owner.ChangeAnim(Constant.IDLE_ANIM_STRING);
         owner.SetDestination(owner.TF.position);
         IdleTime = Random.Range(2f, 3f);
@@ -18,10 +17,7 @@ public class EnemyIdleState : IState<Enemy>
         IdleTime -= Time.deltaTime;
         if (owner.CheckTarget())
         {
-            if(owner.Target != null)
-            {
                owner.EnemyStateMachine.ChangeState(owner.EnemyAttackState);
-            }
         }
         if (IdleTime < 0)
         {

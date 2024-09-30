@@ -8,7 +8,6 @@ public class EnemyAttackState : IState<Enemy>
     private bool IsAttacked;
    public void EnterState(Enemy owner)
     {
-        //Debug.Log("Attack");
         owner.RotateTarget();
         attackTime = Constant.DELAY_TIME_ATTACK;
         IsAttacked = false;

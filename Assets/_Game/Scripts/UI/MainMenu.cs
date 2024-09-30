@@ -27,7 +27,7 @@ public class MainMenu : UICanvas
         NamePlayer.text = SaveManager.Instance.NamePlayer;
         SoundMainMenu.ToggleHandle(SaveManager.Instance.OnSound);
         VibrationMainMenu.ToggleHandle(SaveManager.Instance.OnVibration);
-        BestZoneScore.text = "ZONE:" + (SaveManager.Instance.Zone + 1).ToString() + "  -  BEST:" + LevelManager.Instance.BestRank.ToString();
+        BestZoneScore.text = "ZONE:" + (SaveManager.Instance.Zone + 1).ToString() + "  -  BEST:#" + SaveManager.Instance.BestRank;
     }
     public void OnPlay()
     {

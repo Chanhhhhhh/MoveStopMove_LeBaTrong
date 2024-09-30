@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
+ 
 public struct ScoreRate
 {
    public int minLevel;
@@ -23,34 +23,37 @@ public class LevelManager : Singleton<LevelManager>
     private List<ScoreRate> ScoreRates = new List<ScoreRate>()
     {
         new ScoreRate(0,1f,1),
-        new ScoreRate(2,1.1f,2),
-        new ScoreRate(5,1.3f,3),
-        new ScoreRate(9,1.5f,4),
-        new ScoreRate(15, 1.7f,5),
-        new ScoreRate(18, 2f,6),
-        new ScoreRate(22, 2.2f,7),
+        new ScoreRate(2,1.1f,1),
+        new ScoreRate(7,1.3f,2),
+        new ScoreRate(12,1.5f,3),
+        new ScoreRate(18, 1.6f,3),
+        new ScoreRate(26, 1.8f,4),
+        new ScoreRate(36, 2f,4),
     };
     [SerializeField] private GameObject[] giftBoxes;
     [SerializeField] private Zone[] zones;
     private Zone currentZone;
     private GameObject giftbox;
     private float RadiusMap = 50f;
+    private int AmountEnemy;
+    private int MaxEnemy;
+    private int countEnemy;
     private List<Character> enemyList = new List<Character>();
     private int CoinBonus;
     private Character Killer;
     private bool IsEnd;
     private bool isRevived;
-    private int AmountEnemy;
-    private int MaxEnemy;
-    private int countEnemy;
+
 
     public int PriceRevive = 200;
-    public int BestRank;
     public Transform TargetIndicatorContent;
     public Player player;
 
 
-    
+    //private void Start()
+    //{
+    //    OnInit();
+    //}
     public void CreateZone(int zoneIndex)
     {
         if(currentZone != null)
@@ -71,7 +74,7 @@ public class LevelManager : Singleton<LevelManager>
         CoinBonus = 0;
         Killer = null;
 
-        //// enemy
+        //enemy
         for (int i = 0; i < MaxEnemy; i++)
         {
             SpawnEnemy();
@@ -85,6 +88,7 @@ public class LevelManager : Singleton<LevelManager>
 
         SetAliveUI();
         SpawnGiftBox();
+        SoundManager.Instance.PlaySoundClip(SoundType.SizeUp);
     }
 
     public Vector3 GetRandomPoint(Vector3 center, float radius)
@@ -196,12 +200,14 @@ public class LevelManager : Singleton<LevelManager>
         if(zones.Length - 1 > SaveManager.Instance.Zone)
         {
             SaveManager.Instance.Zone++;
+            SaveManager.Instance.BestRank = zones[SaveManager.Instance.Zone].AmountEnemies;
         }
         UIManager.Instance.CloseAll();
         UIManager.Instance.OpenUI<WinUI>();
         UIManager.Instance.GetUI<WinUI>().SetTextCoinBonus(CoinBonus);
         SimplePool.CollectAll();
         player.OnInit();
+        player.TF.localScale = Vector3.one;
         player.ChangeAnim(Constant.WIN_ANIM_STRING);
     }
 
@@ -227,11 +233,11 @@ public class LevelManager : Singleton<LevelManager>
         UIManager.Instance.CloseAll();
         UIManager.Instance.OpenUI<LoseUI>();
         int rank = GetAlive();
-        if(rank < BestRank)
+        if(rank < SaveManager.Instance.BestRank)
         {
-            BestRank = rank;
+            SaveManager.Instance.BestRank = rank;
         }
-        UIManager.Instance.GetUI<LoseUI>().SetResult(BestRank, Killer.CharName);
+        UIManager.Instance.GetUI<LoseUI>().SetResult(rank, Killer.CharName);
         UIManager.Instance.GetUI<LoseUI>().SetTextCoinBonus(CoinBonus);
         
     }
@@ -241,7 +247,7 @@ public class LevelManager : Singleton<LevelManager>
         { 
             return Random.Range(0, 3);
         }
-        return Random.Range(player.Level - 5, player.Level + 2);
+        return Random.Range(player.Level - 5, player.Level + 3);
     }
 
     public void SetAliveUI()
@@ -280,5 +286,10 @@ public class LevelManager : Singleton<LevelManager>
         SaveManager.Instance.Coin -= PriceRevive;
         GameManager.Instance.ChangeStateGamePlay();
         player.OnRevive(GetRandomPoint(Vector3.zero, RadiusMap));
+    }
+
+    public int ReturnFirstBestRank()
+    {
+        return zones[0].AmountEnemies;
     }
 }

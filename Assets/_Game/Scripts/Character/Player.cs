@@ -11,10 +11,11 @@ public class Player : Character
     {     
 
         base.OnInit();
+        counterTime.OnCancel();
         circleAttack.ClearCircle();
         this.TF.position = Vector3.zero;
         ChangeAnim(Constant.IDLE_ANIM_STRING);
-        counterTime.OnCancel();      
+            
     }
     public override void OnDespawn()
     {
@@ -83,6 +84,7 @@ public class Player : Character
 
     public override void Attack()
     {
+        TargetTF = Target.TF.position;
         ChangeAnim(IsUlti ? Constant.ULTI_ANIM_STRING : Constant.ATTACK_ANIM_STRING);
         IsWeapon = false;
         CounterTime.OnStart(Throw, Constant.DELAY_TIME_ATTACK);

@@ -118,9 +118,9 @@ public class SaveManager : Singleton<SaveManager>
             ShieldState = new SaveItemBase { currentItem = -1, ItemStates = CreateListDefault(DataManager.Instance.shieldData.ShieldDatas.Length) },
             OnSound = true,
             OnVibration = true,
-            NamePlayer = "You", 
+            NamePlayer = "You",
             Zone = 0,
-            BestRank = 1000,
+            BestRank = LevelManager.Instance.ReturnFirstBestRank(),
         };
         defaultData.WeaponState.ItemStates[0] = 0;
         if (!File.Exists(path))

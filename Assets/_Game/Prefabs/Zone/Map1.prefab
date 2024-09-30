@@ -168,9 +168,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.8333333
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 235735db3b7c4f04d814a4447aaf3e2f, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: e354c66bbeebc5c4b97e5b1b97ee6888, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &4735222789231391864
 MonoBehaviour:
@@ -184,8 +184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8805d3539fb7e6341983d936b2f410ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AmountEnemies: 2
-  MaxEnemies: 2
+  AmountEnemies: 10
+  MaxEnemies: 5
   MapRadius: 30
 --- !u!1 &1328558498443772673
 GameObject:
@@ -412,7 +412,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 6, y: 1, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5320252222910331868}

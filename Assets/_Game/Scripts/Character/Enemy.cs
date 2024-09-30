@@ -15,7 +15,7 @@ public class Enemy : Character
     [SerializeField] private NavMeshAgent NavMeshAgent;
 
     private Vector3 Destination;
-    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.5f;
+    public bool IsDestination => Vector3.Distance(Destination, TF.position) <= 0.3f;
 
     public override void OnInit()
     {
@@ -45,11 +45,13 @@ public class Enemy : Character
     {
         Destination = Pos;
         Destination.y = 0;
+       //Debug.Log(Destination);
         NavMeshAgent.SetDestination(Destination);
     }
 
     public override void Attack()
     {
+        TargetTF = Target.TF.position;
         ChangeAnim(IsUlti ? Constant.ULTI_ANIM_STRING : Constant.ATTACK_ANIM_STRING);
     }
 

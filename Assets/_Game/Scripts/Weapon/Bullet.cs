@@ -6,10 +6,12 @@ public class Bullet : GameUnit
     private Vector3 target;
     private Character owner;
     private Character victim;
+    private bool IsUlti;
 
     protected Vector3 StartPos;
     protected float Distance;
     protected float Speed;
+
 
     [SerializeField] protected Transform Child;
     
@@ -33,10 +35,11 @@ public class Bullet : GameUnit
         OnInit();
         TF.localScale = Vector3.one*scale;
         Speed = Constant.SPEED_BULLET;
+        this.IsUlti = IsUlti;
         if (IsUlti)
         {
-            TF.DOScale(Vector3.one * 2.5f, 1f);
-            Speed = Constant.SPEED_BULLET * 2;
+            TF.DOScale(Vector3.one * 4f, 1f);
+            Speed = Constant.SPEED_BULLET * 2.5f;
         }        
         this.owner = character;
         this.target = target;
@@ -51,7 +54,11 @@ public class Bullet : GameUnit
         {
             Vibration.Vibrate(200);
             LevelManager.Instance.OnHitPlayer(this.owner);
-            OnDespawn();
+            if (!IsUlti)
+            {
+                OnDespawn();
+            }
+                     
         }
 
         if(other.CompareTag(Constant.TAG_ENEMY) && other.gameObject != owner.gameObject)
@@ -59,7 +66,10 @@ public class Bullet : GameUnit
             Character character = Cache.GetCharacter(other);
             this.victim = character;
             LevelManager.Instance.OnHitEnemy(this.owner, this.victim);
-            OnDespawn();
+            if (!IsUlti)
+            {
+                OnDespawn();
+            }
         }
     }
 }
