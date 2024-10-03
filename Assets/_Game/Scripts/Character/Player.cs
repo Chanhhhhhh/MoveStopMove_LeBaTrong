@@ -47,8 +47,12 @@ public class Player : Character
             IsWeapon = true;
         }
         
-        if (Input.GetMouseButton(0) && JoystickControl.direct != Vector3.zero)
+        if (Input.GetMouseButton(0))
         {
+            if(JoystickControl.direct == Vector3.zero)
+            {
+                JoystickControl.direct = TF.forward;
+            }
             CounterTime.OnCancel();
             ChangeAnim(Constant.RUN_ANIM_STRING);
             rb.MovePosition(rb.position + JoystickControl.direct * Speed *Time.deltaTime);

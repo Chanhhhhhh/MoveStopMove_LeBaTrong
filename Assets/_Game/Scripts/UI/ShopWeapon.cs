@@ -69,7 +69,7 @@ public class ShopWeapon : ShopBase
         }
         LevelManager.Instance.player.ChangeWeapon(IndexWeapon);
         SaveWeapon();
-        GameManager.ChangeState(GameState.MainMenu);
+        OnExit();
         this.CloseDirectly();
 
     }
